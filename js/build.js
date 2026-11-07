@@ -37,7 +37,7 @@
   groups.color.insertAdjacentHTML('afterend', '<p class="swatch-name" id="cfgColorName"></p>');
   ['shelter', 'living'].forEach((g) => D.items[g].forEach((i) => groups[g].insertAdjacentHTML('beforeend',
     `<button class="item" data-id="${i.id}" aria-pressed="false"><svg viewBox="0 0 40 40"><path d="${i.icon}"/></svg><span><b>${i.name}</b><small>${i.th}</small></span><i></i></button>`)));
-  const moodThumb = { dawn: 'forest-walk', noon: 'pines', golden: 'desert-dusk', night: 'lantern' };
+  const moodThumb = { dawn: 'ranger-morning', noon: 'awning-shade', golden: 'desert-dusk', night: 'lantern' };
   D.moods.forEach((mo) => groups.mood.insertAdjacentHTML('beforeend',
     `<button class="card" data-id="${mo.id}"><span class="card__img"><img src="assets/img/real/${moodThumb[mo.id]}.jpg" alt="" loading="lazy"/></span><b>${mo.name}</b><small>${mo.th} · ${mo.time}</small></button>`));
 

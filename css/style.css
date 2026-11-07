@@ -892,3 +892,48 @@ html { overflow-x: clip; }
   .hero { min-height: 0; }
 }
 @media (max-width: 700px) { .hero__scroll { display: none; } }
+
+/* ---- v4: hero photography framing + Safari-safe Thai wrapping ---- */
+.hero__slide img { object-position: var(--p, 50% 50%); }
+@media (max-width: 700px) { .hero__slide img { object-position: var(--pm, var(--p, 50% 50%)); } }
+/* bright daylight photos need a slightly deeper shade under the copy */
+.hero__shade {
+  background:
+    linear-gradient(180deg, rgba(20, 16, 12, .6) 0%, rgba(20, 16, 12, 0) 24%),
+    linear-gradient(0deg, rgba(20, 16, 12, .9) 0%, rgba(20, 16, 12, .6) 38%, rgba(20, 16, 12, 0) 70%),
+    linear-gradient(90deg, rgba(20, 16, 12, .55) 0%, rgba(20, 16, 12, 0) 62%);
+}
+/* text-wrap balance/pretty only on English display type; Thai paragraphs use normal wrapping */
+p, li, figcaption, small, .studio__desc, .hero__sub, .section-head__lead, blockquote { text-wrap: wrap; }
+.display, .spread h3, .lookbook__title h3, .code__item h3 { text-wrap: balance; }
+
+/* ---- v4b: hero composition — the tent is never hidden behind the copy ---- */
+.hero { background: #17130F; }
+.hero__slides::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+
+/* desktop: editorial split — copy on a dark field at left, photo on the right two-thirds */
+@media (min-width: 1081px) {
+  .hero__slides { inset: -4% 0 0 34%; }
+  .hero__slides::after { background: linear-gradient(90deg, #17130F 0%, rgba(23, 19, 15, .55) 16%, rgba(23, 19, 15, 0) 38%); }
+  .hero__shade {
+    background:
+      linear-gradient(180deg, rgba(20, 16, 12, .55) 0%, rgba(20, 16, 12, 0) 22%),
+      linear-gradient(0deg, rgba(20, 16, 12, .55) 0%, rgba(20, 16, 12, 0) 30%);
+  }
+  .hero__copy { max-width: 820px; }
+  .hero__title { font-size: clamp(56px, 6vw, 100px); }
+  .hero__lead { max-width: 520px; }
+}
+
+/* phones: photo fills the top of the screen untouched, copy sits below on the dark field */
+@media (max-width: 700px) {
+  .hero { align-items: flex-end; padding-top: max(calc(var(--nav-h, 104px) + 24px), 50svh); }
+  .hero__slides { inset: 0 0 auto 0; height: 62svh; min-height: 360px; }
+  .hero__slides::after { background: linear-gradient(0deg, #17130F 0%, rgba(23, 19, 15, .7) 22%, rgba(23, 19, 15, 0) 52%), linear-gradient(180deg, rgba(23, 19, 15, .55) 0%, rgba(23, 19, 15, 0) 26%); }
+  .hero__shade { background: none; }
+  .hero__slide img { transform: none; }
+  .hero__slide.is-active img { animation: kenburnsM 9s linear forwards; }
+  @keyframes kenburnsM { from { transform: scale(1.06); } to { transform: scale(1); } }
+  .hero__title { font-size: clamp(34px, 10.5vw, 56px); margin-bottom: 12px; }
+}
+.hero__slides { overflow: hidden; }

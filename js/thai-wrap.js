@@ -13,6 +13,7 @@
   'use strict';
   const THAI = /[฀-๿]/;
   const SHORT = 13;
+  const ZWSP = '​';
   const KEEP = [
     'แคนวาส', 'เต้นท์', 'เต็นท์', 'แคมป์', 'แคมเปอร์', 'เวิร์กช็อป', 'ลิงก์', 'ยูทาห์', 'ไบซัน', 'ไวนิล', 'คลาสสิก', 'วินเทจ',
     'ฟลายชีท', 'พึ่บพั่บ', 'สปริงบาร์', 'สปริง', 'ตารางฟุต', 'ตัดเย็บ', 'ยืนเดิน', 'ลงพื้น', 'ไนลอน', 'โชว์รูม', 'คาวบอย',
@@ -75,13 +76,17 @@
       if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
       const ps = pieces(part);
       ps.forEach((p, i) => {
-        if (i > 0) frag.appendChild(document.createElement('wbr'));
+        // a zero-width space marks the break point (plain text works the same in every engine,
+        // unlike <wbr> between no-wrap spans, which some WebKit builds lay out incorrectly)
+        if (i > 0) frag.appendChild(document.createTextNode(ZWSP));
         const span = document.createElement('span');
         span.className = 'nw';
         span.textContent = p;
         frag.appendChild(span);
       });
     });
+    // never change the words themselves: if the rebuilt text differs from the source, leave it alone
+    if (frag.textContent.split(ZWSP).join('').replace(/ /g, ' ') !== text.replace(/ /g, ' ')) return;
     node.replaceWith(frag);
   }
 

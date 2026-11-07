@@ -33,10 +33,10 @@ window.USCampData = {
     { id: 'bison', name: 'Bison', th: 'น้ำตาลไบซัน', wall: '#574836', shade: '#45392B', roof: '#DCD6CA' }
   ],
   terrains: [
-    { id: 'desert', name: 'High Desert', th: 'ทะเลทรายที่ราบสูง', word: 'Mesa', thumb: 'assets/img/real/joshua-tree.jpg' },
-    { id: 'forest', name: 'Pine Forest', th: 'ป่าสนบนดอย', word: 'Pines', thumb: 'assets/img/real/forest-walk.jpg' },
+    { id: 'desert', name: 'High Desert', th: 'ทะเลทรายที่ราบสูง', word: 'Mesa', thumb: 'assets/img/real/awning-desert.jpg' },
+    { id: 'forest', name: 'Pine Forest', th: 'ป่าสนบนดอย', word: 'Pines', thumb: 'assets/img/real/ranger.jpg' },
     { id: 'lake', name: 'Lakeside', th: 'ริมทะเลสาบ', word: 'Lake', thumb: 'assets/img/real/lake.jpg' },
-    { id: 'range', name: 'Open Range', th: 'ทุ่งกว้างริมหุบเขา', word: 'Range', thumb: 'assets/img/real/river.jpg' }
+    { id: 'range', name: 'Open Range', th: 'ทุ่งกว้างริมหุบเขา', word: 'Range', thumb: 'assets/img/real/canyon-autumn.jpg' }
   ],
   moods: [
     { id: 'dawn', name: 'First Light', th: 'รุ่งเช้า', word: 'First Light', time: '06:10' },
@@ -46,12 +46,13 @@ window.USCampData = {
   ],
   /* which real photo represents each setting × time of day */
   scenes: {
-    desert: { dawn: 'joshua-tree', noon: 'joshua-tree', golden: 'desert-dusk', night: 'bags' },
-    forest: { dawn: 'forest-walk', noon: 'pines', golden: 'mug', night: 'bags' },
+    desert: { dawn: 'awning-desert', noon: 'awning-desert', golden: 'desert-dusk', night: 'bags' },
+    forest: { dawn: 'ranger-morning', noon: 'ranger', golden: 'mug', night: 'bags' },
     lake: { dawn: 'lake', noon: 'lake', golden: 'lake', night: 'bags' },
-    range: { dawn: 'river', noon: 'river', golden: 'ranch', night: 'bags' }
+    range: { dawn: 'open-plain', noon: 'canyon-autumn', golden: 'ranch', night: 'bags' }
   },
   credits: {
+    ranger: 'Springbar®', 'ranger-morning': 'Springbar®', 'awning-desert': 'Springbar®', 'canyon-autumn': 'Springbar®', 'open-plain': 'Springbar®', redrock: 'Springbar®',
     'desert-dusk': 'Springbar®', 'joshua-tree': 'Springbar®', 'forest-walk': 'Springbar®', snow: 'Springbar®', vintage: 'Springbar® archive',
     ranch: '@dellpickles', mug: '@jorduroy', river: '@jorduroy', bags: '@bloodknots', lantern: '@twora-camp', lake: '@twora-camp', pines: '@allaboutoutdoor_official'
   },
