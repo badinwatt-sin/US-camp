@@ -20,7 +20,7 @@ python3 -m http.server 8000
 | 2 | **A Day Under Canvas** | First Light / High Noon / Golden Hour / Lantern Light: the sky gradient, a real photo, the story and the senses change together and auto-advance. Ends with a strip of credited community photos |
 | 3 | **The Tents (360° Studio)** | Three.js models of the four real Springbar tents (Compact, Outfitter, Vagabond, Traveler) built from the official product photos and field-guide outlines, in the five real colourways. Switch to the official front and rear product photos |
 | 4 | **Build Your Camp** | Five-step configurator (setting → tent → shelter → living → time of day). The preview is a photo lookbook: a real campsite photo for the setting and time, the chosen tent's real product photo, and the selected gear. Generates a camp name, style tags, a Camp Card and a share link, and can send the camp to an advisor |
-| 5 | **Pitch Day** | Booking form for a showroom visit, filled in from the Camp Card |
+| 5 | **นัดลองกางเต้นท์ (try-out booking)** | Booking form for a showroom visit, filled in from the Camp Card |
 
 ## Files
 
@@ -40,6 +40,6 @@ assets/img/products/    official Springbar® product photos, per model × colour
 - Specs in `js/data.js` come from springbar.com (Nov 2026). Check them again before launch.
 - Get written permission from Springbar for the product photography, and from each credited community photographer (@dellpickles, @jorduroy, @bloodknots, @twora-camp, @allaboutoutdoor_official), before commercial use.
 - Replace the placeholder contact details in the footer (LINE @uscamp, hello@uscamp.co, showroom address).
-- Connect the Pitch Day form to a backend, LINE OA or a form service. It only validates in the browser right now.
+- Connect the try-out booking form to a backend, LINE OA or a form service. It only validates in the browser right now.
 - Some community photos are small (about 380–790 px wide). Ask for the originals.
 - Confirm the dealer relationship and trademark wording with Springbar.

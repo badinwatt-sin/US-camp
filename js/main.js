@@ -120,8 +120,6 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(setNavH);
   let lastY = 0;
   const progressBar = $('#scrollProgress');
-  const dock = $('#dock');
-  const build = $('#build'), visit = $('#visit');
   const onScroll = () => {
     const y = window.scrollY;
     nav.classList.toggle('is-solid', y > 40);
@@ -129,12 +127,6 @@
     lastY = y;
     const max = document.documentElement.scrollHeight - innerHeight;
     if (progressBar) progressBar.style.transform = `scaleX(${max > 0 ? (y / max).toFixed(4) : 0})`;
-    // mobile action dock: after the hero, hidden while the visitor is already building or booking
-    if (dock) {
-      const inBuild = build.getBoundingClientRect().top < innerHeight * 0.6 && build.getBoundingClientRect().bottom > innerHeight * 0.4;
-      const inVisit = visit.getBoundingClientRect().top < innerHeight * 0.8;
-      dock.classList.toggle('is-on', y > innerHeight * 0.85 && !inBuild && !inVisit);
-    }
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();

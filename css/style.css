@@ -830,23 +830,6 @@ body::after { box-shadow: inset 0 0 120px rgba(31, 26, 20, .12); }
 .visit__done h3 { font-family: var(--f-display); font-weight: 400; text-transform: uppercase; font-size: 24px; margin: 12px 0 10px; }
 .visit__done p { max-width: 36ch; margin: 0 auto 18px; }
 
-/* ---- mobile action dock ---- */
-.dock { display: none; }
-@media (max-width: 900px) {
-  .dock {
-    display: flex; gap: 8px; position: fixed; z-index: 60;
-    left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px));
-    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    padding: 6px; border-radius: 999px; background: rgba(31, 26, 20, .9); backdrop-filter: blur(10px);
-    box-shadow: 0 16px 40px -12px rgba(0, 0, 0, .5);
-    transform: translateY(calc(100% + 30px)); transition: transform .5s var(--ease);
-  }
-  .dock.is-on { transform: none; }
-  .dock .btn { flex: 1; padding: 12px 10px; }
-  .dock .btn--ink { --bg: var(--rust); border-color: var(--rust); }
-  .toast { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
-}
-
 /* ---- tablet & phone layouts ---- */
 @media (max-width: 1080px) {
   /* configurator: preview stays in view while choosing */
