@@ -22,6 +22,27 @@ python3 -m http.server 8000
 | 4 | **Build Your Camp** | Five-step configurator (setting → tent → shelter → living → time of day). The preview is a photo lookbook: a real campsite photo for the setting and time, the chosen tent's real product photo, and the selected gear. Generates a camp name, style tags, a Camp Card and a share link, and can send the camp to an advisor |
 | 5 | **นัดลองกางเต้นท์ (try-out booking)** | Booking form for a showroom visit, filled in from the Camp Card |
 
+## Shop · checkout · tracking · admin (demo)
+
+> **Demo only.** Prices are simulated (THB, roughly from springbar.com USD list prices) and must be confirmed.
+> No payment is processed, nothing is sent to a server, and no card number is stored (brand + last 4 only).
+> Orders live in the visitor's browser (`localStorage`), so the admin page only sees orders made in the same browser.
+
+| Page | What it does |
+|---|---|
+| `shop.html` | Catalogue (4 tents × 5 colours + 10 accessories), category tabs, sort, product dialog with colour/size options, cart drawer |
+| `checkout.html` | 3 steps: delivery (pick up at store with date + time, or address with standard/express, express limited to Bangkok metro) → payment (card / PromptPay QR / bank transfer) → review. Card runs a simulated 3-D Secure OTP (`123456`); PromptPay shows a sample QR with a 15-minute timer; transfer shows bank accounts and takes a slip upload |
+| `track.html` | Customer looks up an order by order number + last 4 digits of phone: progress bar, carrier + tracking number, timeline, upload a slip later |
+| `admin.html` | Back office (demo passcode `demo`): KPIs, filters, search, order drawer to verify slips, mark paid/refund, update status with carrier + tracking number, notify customer (simulated), seed sample orders, wipe demo data |
+
+Order lifecycle: payment `pending → awaiting_verification → paid` (or `failed` / `refunded`);
+delivery `placed → confirmed → packing → shipped → out_for_delivery → delivered`;
+pickup `placed → confirmed → packing → ready_for_pickup → picked_up`; any → `cancelled`.
+
+**To go live** you need a backend and real providers, for example:
+a database + server-side admin login for orders; a Thai payment gateway that supports cards and PromptPay (e.g. Omise/Opn, 2C2P, GB Prime Pay or Stripe Thailand) with webhooks to mark orders paid;
+a slip-verification service or manual check for bank transfers; SMS/LINE OA messages for status updates; and carrier tracking links or APIs.
+
 ## Files
 
 ```
@@ -33,6 +54,14 @@ js/tent360.js      Three.js 360° studio
 js/build.js        Build Your Camp configurator
 assets/img/real/        lifestyle and craft photography (Springbar® and credited community photos)
 assets/img/products/    official Springbar® product photos, per model × colour + rear view
+shop.html, checkout.html, track.html, admin.html   demo commerce pages
+css/shop.css            commerce styles
+js/shop/catalog.js      products + simulated prices          ← edit prices here
+js/shop/store.js        cart, orders, statuses, shipping rates, validation (localStorage)
+js/shop/ui.js           cart drawer, cart badge, toasts
+js/shop/{shop,checkout,track,admin,home}.js   page logic
+js/thai-wrap.js         keeps Thai words whole when lines wrap
+assets/img/shop/        accessory product photos (Springbar®)
 ```
 
 ## Before launch

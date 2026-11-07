@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>US Camp Order Tracking</title>
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#1F1A14" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Ultra&family=Jost:wght@300;400;500;600&family=Yellowtail&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=20261108d" />
+  <link rel="stylesheet" href="css/shop.css?v=20261108d" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231F1A14'/%3E%3Cpath d='M12 50 L20 18 H44 L52 50 Z' fill='%23B98D57'/%3E%3C/svg%3E" />
+</head>
+<body class="commerce">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="star" viewBox="0 0 40 40"><path d="M20 2 L23 14 L34 8 L27 18 L38 20 L27 22 L34 32 L23 26 L20 38 L17 26 L6 32 L13 22 L2 20 L13 18 L6 8 L17 14 Z" fill="currentColor"/></symbol>
+  <symbol id="logo" viewBox="0 0 220 64"><path d="M4 14 Q110 2 216 14 L216 20 Q110 10 4 20 Z" fill="currentColor"/><use href="#star" x="102" y="20" width="16" height="16"/><text x="110" y="58" text-anchor="middle" font-family="Ultra, serif" font-size="27" letter-spacing="2" fill="currentColor">US CAMP</text></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20.5" r="1.4" fill="currentColor"/><circle cx="17.5" cy="20.5" r="1.4" fill="currentColor"/></symbol>
+</svg>
+
+<header class="nav is-solid" id="nav">
+  <div class="nav__strip demo-strip"><span>★ โหมดสาธิต · ข้อมูลคำสั่งซื้อเก็บไว้ในเครื่องนี้เท่านั้น ★</span></div>
+  <div class="nav__bar">
+    <a href="index.html" class="nav__logo" aria-label="US Camp หน้าแรก"><svg><use href="#logo"/></svg></a>
+    <nav class="nav__links" id="navLinks">
+      <a href="index.html">หน้าแรก</a>
+      <a href="shop.html">ร้านค้า</a>
+      <a href="track.html" class="is-current">ติดตามคำสั่งซื้อ</a>
+    </nav>
+    <button class="nav__cart" data-open-cart aria-label="เปิดตะกร้าสินค้า"><svg><use href="#i-cart"/></svg><b data-cart-count hidden>0</b></button>
+    <button class="nav__burger" id="burger" aria-label="เปิดเมนู" aria-expanded="false"><span></span><span></span></button>
+  </div>
+</header>
+
+<main class="wrap track">
+  <section class="track-find" id="find">
+    <p class="eyebrow">Order tracking</p>
+    <h1 class="display">Where’s my tent?</h1>
+    <p>ใส่เลขคำสั่งซื้อและเบอร์โทร 4 หลักท้ายที่ใช้สั่งซื้อ เพื่อดูสถานะการชำระเงินและการจัดส่ง</p>
+    <form class="track-form" id="trackForm" novalidate>
+      <label class="f" for="tNo">เลขคำสั่งซื้อ<input id="tNo" placeholder="USC-261108-1234" autocomplete="off" required /></label>
+      <label class="f" for="tPhone">เบอร์โทร 4 หลักท้าย<input id="tPhone" inputmode="numeric" maxlength="4" placeholder="5678" required /></label>
+      <button class="btn btn--ink" type="submit">ติดตามคำสั่งซื้อ</button>
+    </form>
+    <p class="err" id="tErr" hidden>ไม่พบคำสั่งซื้อนี้ ตรวจสอบเลขคำสั่งซื้อและเบอร์โทรอีกครั้ง (โหมดสาธิตค้นหาได้เฉพาะคำสั่งซื้อที่สร้างในเครื่องนี้)</p>
+    <div class="recent" id="recent" hidden></div>
+  </section>
+
+  <section class="track-view" id="view" hidden>
+    <button class="link-btn" id="backFind">← ค้นหาคำสั่งซื้ออื่น</button>
+    <header class="tv-head">
+      <div>
+        <p class="eyebrow">คำสั่งซื้อ</p>
+        <h1 id="vNo"></h1>
+        <p class="tv-date" id="vDate"></p>
+      </div>
+      <div class="tv-badges" id="vBadges"></div>
+    </header>
+
+    <div class="box tv-progress">
+      <h2 class="tv-now" id="vNow"></h2>
+      <p id="vNowDesc"></p>
+      <ol class="progress" id="vProgress"></ol>
+      <div class="tv-ship" id="vShip"></div>
+    </div>
+
+    <div class="box tv-pay" id="vPayBox" hidden></div>
+
+    <div class="tv-grid">
+      <div class="box">
+        <h3>ความเคลื่อนไหว</h3>
+        <ol class="timeline" id="vTimeline"></ol>
+      </div>
+      <div class="box">
+        <h3>รายการสินค้า</h3>
+        <div id="vLines" class="sum-lines"></div>
+        <div class="sum-calc" id="vTotals"></div>
+        <h3>ที่อยู่ / การรับสินค้า</h3>
+        <p id="vAddr"></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer footer--slim">
+  <p class="footer__legal">โหมดสาธิต: สถานะคำสั่งซื้ออัปเดตโดยร้านผ่านหน้าผู้ดูแล (จำลอง) และเก็บไว้ในเบราว์เซอร์นี้เท่านั้น</p>
+</footer>
+
+<script src="js/data.js?v=20261108d"></script>
+<script src="js/shop/catalog.js?v=20261108d"></script>
+<script src="js/shop/store.js?v=20261108d"></script>
+<script src="js/shop/ui.js?v=20261108d"></script>
+<script src="js/shop/track.js?v=20261108d"></script>
+<script src="js/thai-wrap.js?v=20261108d"></script>
+</body>
+</html>

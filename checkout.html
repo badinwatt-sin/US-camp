@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>US Camp Checkout</title>
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#1F1A14" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Ultra&family=Jost:wght@300;400;500;600&family=Yellowtail&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=20261108d" />
+  <link rel="stylesheet" href="css/shop.css?v=20261108d" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231F1A14'/%3E%3Cpath d='M12 50 L20 18 H44 L52 50 Z' fill='%23B98D57'/%3E%3C/svg%3E" />
+</head>
+<body class="commerce checkout-page">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="star" viewBox="0 0 40 40"><path d="M20 2 L23 14 L34 8 L27 18 L38 20 L27 22 L34 32 L23 26 L20 38 L17 26 L6 32 L13 22 L2 20 L13 18 L6 8 L17 14 Z" fill="currentColor"/></symbol>
+  <symbol id="logo" viewBox="0 0 220 64"><path d="M4 14 Q110 2 216 14 L216 20 Q110 10 4 20 Z" fill="currentColor"/><use href="#star" x="102" y="20" width="16" height="16"/><text x="110" y="58" text-anchor="middle" font-family="Ultra, serif" font-size="27" letter-spacing="2" fill="currentColor">US CAMP</text></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20.5" r="1.4" fill="currentColor"/><circle cx="17.5" cy="20.5" r="1.4" fill="currentColor"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+</svg>
+
+<header class="nav is-solid" id="nav">
+  <div class="nav__strip demo-strip"><span>★ โหมดสาธิต · ไม่มีการตัดเงินจริง · ห้ามกรอกข้อมูลบัตรจริง ★</span></div>
+  <div class="nav__bar">
+    <a href="index.html" class="nav__logo" aria-label="US Camp หน้าแรก"><svg><use href="#logo"/></svg></a>
+    <nav class="nav__links" id="navLinks">
+      <a href="shop.html">← กลับไปเลือกสินค้า</a>
+      <a href="track.html">ติดตามคำสั่งซื้อ</a>
+    </nav>
+    <span class="secure"><svg><use href="#i-lock"/></svg>ชำระเงิน (จำลอง)</span>
+    <button class="nav__burger" id="burger" aria-label="เปิดเมนู" aria-expanded="false"><span></span><span></span></button>
+  </div>
+</header>
+
+<main class="wrap checkout">
+  <!-- ===== empty cart ===== -->
+  <section class="co-empty" id="coEmpty" hidden>
+    <h1 class="display">Your pack is empty.</h1>
+    <p>ยังไม่มีสินค้าในตะกร้า เลือกเต้นท์หรืออุปกรณ์ก่อนแล้วกลับมาที่นี่</p>
+    <a href="shop.html" class="btn btn--ink">ไปที่ร้านค้า</a>
+  </section>
+
+  <!-- ===== checkout flow ===== -->
+  <section id="coFlow" hidden>
+    <ol class="stepper" id="stepper">
+      <li class="is-active"><span>1</span>การจัดส่ง</li>
+      <li><span>2</span>การชำระเงิน</li>
+      <li><span>3</span>ตรวจสอบและยืนยัน</li>
+    </ol>
+
+    <div class="co-grid">
+      <div class="co-main">
+        <!-- step 1 -->
+        <form class="co-step is-active" id="fShip" novalidate>
+          <fieldset class="box">
+            <legend>ข้อมูลผู้สั่งซื้อ</legend>
+            <div class="f-grid">
+              <label class="f f--full" for="cName">ชื่อ–นามสกุล<input id="cName" name="name" autocomplete="name" required /><span class="err" hidden>กรอกชื่อผู้รับ</span></label>
+              <label class="f" for="cPhone">เบอร์มือถือ<input id="cPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="08X-XXX-XXXX" required /><span class="err" hidden>เบอร์โทร 9–10 หลัก ขึ้นต้นด้วย 0</span></label>
+              <label class="f" for="cEmail">อีเมล <i>(ไม่บังคับ)</i><input id="cEmail" name="email" type="email" autocomplete="email" /><span class="err" hidden>รูปแบบอีเมลไม่ถูกต้อง</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="box">
+            <legend>วิธีรับสินค้า</legend>
+            <div class="choices" id="shipChoices"></div>
+
+            <div class="sub-box" id="pickupBox" hidden>
+              <div class="store-card"><b id="storeName"></b><span id="storeAddr"></span><span id="storeHours"></span></div>
+              <div class="f-grid">
+                <label class="f" for="pDate">วันที่จะมารับ<input id="pDate" name="pickupDate" type="date" required /><span class="err" hidden>เลือกวันที่มารับ</span></label>
+                <label class="f" for="pTime">ช่วงเวลา<select id="pTime" name="pickupTime"><option>10:00–12:00</option><option>13:00–15:00</option><option>15:00–18:00</option></select></label>
+              </div>
+            </div>
+
+            <div class="sub-box" id="addrBox" hidden>
+              <div class="f-grid">
+                <label class="f f--full" for="aLine">ที่อยู่ (บ้านเลขที่ หมู่บ้าน ถนน)<input id="aLine" name="line1" autocomplete="street-address" required /><span class="err" hidden>กรอกที่อยู่สำหรับจัดส่ง</span></label>
+                <label class="f" for="aSub">แขวง / ตำบล<input id="aSub" name="subdistrict" required /><span class="err" hidden>กรอกแขวงหรือตำบล</span></label>
+                <label class="f" for="aDist">เขต / อำเภอ<input id="aDist" name="district" required /><span class="err" hidden>กรอกเขตหรืออำเภอ</span></label>
+                <label class="f" for="aProv">จังหวัด<select id="aProv" name="province" required></select><span class="err" hidden>เลือกจังหวัด</span></label>
+                <label class="f" for="aZip">รหัสไปรษณีย์<input id="aZip" name="postcode" inputmode="numeric" maxlength="5" autocomplete="postal-code" required /><span class="err" hidden>รหัสไปรษณีย์ 5 หลัก</span></label>
+                <label class="f f--full" for="aNote">หมายเหตุถึงพนักงานส่ง <i>(ไม่บังคับ)</i><input id="aNote" name="note" placeholder="เช่น ฝากไว้กับ รปภ." /></label>
+              </div>
+              <p class="hint" id="expressHint" hidden>จัดส่งด่วนใช้ได้เฉพาะกรุงเทพฯ และปริมณฑล</p>
+            </div>
+          </fieldset>
+          <div class="co-actions"><a href="shop.html" class="btn btn--line btn--sm">← เลือกสินค้าต่อ</a><button class="btn btn--ink" type="submit">ถัดไป: ชำระเงิน →</button></div>
+        </form>
+
+        <!-- step 2 -->
+        <form class="co-step" id="fPay" novalidate>
+          <fieldset class="box">
+            <legend>เลือกวิธีชำระเงิน</legend>
+            <div class="choices" id="payChoices">
+              <label class="choice"><input type="radio" name="pay" value="card" checked /><span class="choice__body"><b>บัตรเครดิต / เดบิต</b><small>Visa · Mastercard · JCB · ยืนยันตัวตนด้วย OTP</small></span><span class="pay-logos"><i>VISA</i><i>MC</i><i>JCB</i></span></label>
+              <label class="choice"><input type="radio" name="pay" value="promptpay" /><span class="choice__body"><b>พร้อมเพย์ QR</b><small>สแกนจ่ายผ่านแอปธนาคาร ยืนยันอัตโนมัติ</small></span><span class="pay-logos"><i class="pp">QR</i></span></label>
+              <label class="choice"><input type="radio" name="pay" value="transfer" /><span class="choice__body"><b>โอนผ่านธนาคาร</b><small>โอนเข้าบัญชีร้าน แล้วแนบสลิปให้ร้านตรวจสอบ</small></span><span class="pay-logos"><i>฿</i></span></label>
+            </div>
+
+            <div class="sub-box" id="cardBox">
+              <p class="warn-card"><b>โหมดสาธิต:</b> ห้ามกรอกบัตรจริง ใช้บัตรทดสอบ 4242 4242 4242 4242 ระบบไม่บันทึกเลขบัตร เก็บแค่ 4 หลักท้าย</p>
+              <div class="f-grid">
+                <label class="f f--full" for="kNum">หมายเลขบัตร<span class="card-in"><input id="kNum" inputmode="numeric" autocomplete="off" placeholder="4242 4242 4242 4242" maxlength="23" /><em id="kBrand"></em></span><span class="err" hidden>หมายเลขบัตรไม่ถูกต้อง</span></label>
+                <label class="f f--full" for="kName">ชื่อบนบัตร<input id="kName" autocomplete="off" placeholder="SOMCHAI JAIDEE" /><span class="err" hidden>กรอกชื่อบนบัตร</span></label>
+                <label class="f" for="kExp">วันหมดอายุ<input id="kExp" inputmode="numeric" autocomplete="off" placeholder="MM / YY" maxlength="7" /><span class="err" hidden>วันหมดอายุไม่ถูกต้อง</span></label>
+                <label class="f" for="kCvc">CVC<input id="kCvc" inputmode="numeric" autocomplete="off" placeholder="123" maxlength="4" /><span class="err" hidden>CVC 3–4 หลัก</span></label>
+              </div>
+              <button type="button" class="link-btn" id="kTest">ใช้บัตรทดสอบ</button>
+            </div>
+            <div class="sub-box" id="ppBox" hidden>
+              <ol class="howto"><li>กดยืนยันคำสั่งซื้อในขั้นถัดไป</li><li>ระบบแสดง QR พร้อมยอดเงิน (มีเวลา 15 นาที)</li><li>สแกนด้วยแอปธนาคาร ร้านยืนยันการชำระให้อัตโนมัติ</li></ol>
+            </div>
+            <div class="sub-box" id="trBox" hidden>
+              <ol class="howto"><li>กดยืนยันคำสั่งซื้อในขั้นถัดไป</li><li>โอนเงินเข้าบัญชีร้านตามยอดที่แสดง</li><li>แนบสลิปการโอน หรือส่งสลิปทาง LINE <b>@uscamp</b></li><li>ร้านตรวจสอบและยืนยันภายใน 1 วันทำการ</li></ol>
+            </div>
+          </fieldset>
+          <div class="co-actions"><button type="button" class="btn btn--line btn--sm" data-back>← ย้อนกลับ</button><button class="btn btn--ink" type="submit">ถัดไป: ตรวจสอบ →</button></div>
+        </form>
+
+        <!-- step 3 -->
+        <section class="co-step" id="fReview" aria-labelledby="revTitle">
+          <h2 class="sr-only" id="revTitle">ตรวจสอบคำสั่งซื้อ</h2>
+          <div class="box review">
+            <div class="review__row"><div><p class="lbl">ผู้สั่งซื้อ</p><p id="rvCustomer"></p></div><button class="link-btn" data-goto="0">แก้ไข</button></div>
+            <div class="review__row"><div><p class="lbl">การจัดส่ง</p><p id="rvShip"></p></div><button class="link-btn" data-goto="0">แก้ไข</button></div>
+            <div class="review__row"><div><p class="lbl">การชำระเงิน</p><p id="rvPay"></p></div><button class="link-btn" data-goto="1">แก้ไข</button></div>
+          </div>
+          <label class="consent"><input type="checkbox" id="consent" /> <span>ฉันเข้าใจว่านี่คือ <b>คำสั่งซื้อจำลอง</b> ราคาเป็นราคาตัวอย่าง และยังไม่มีการเรียกเก็บเงินหรือจัดส่งจริง</span></label>
+          <p class="err" id="consentErr" hidden>กรุณายืนยันว่าเข้าใจเงื่อนไขโหมดสาธิต</p>
+          <div class="co-actions"><button type="button" class="btn btn--line btn--sm" data-back>← ย้อนกลับ</button><button class="btn btn--ink btn--lg" id="placeOrder">ยืนยันคำสั่งซื้อ</button></div>
+        </section>
+      </div>
+
+      <aside class="co-sum" id="coSum" aria-label="สรุปคำสั่งซื้อ">
+        <details class="sum-toggle" id="sumToggle" open>
+          <summary><span>สรุปคำสั่งซื้อ</span><b id="sumTotalTop"></b></summary>
+          <div id="sumLines" class="sum-lines"></div>
+          <button class="link-btn" data-open-cart>แก้ไขตะกร้า</button>
+          <div class="sum-calc">
+            <div class="sum-row"><span>ยอดรวมสินค้า</span><span id="sumSub"></span></div>
+            <div class="sum-row"><span>ค่าจัดส่ง</span><span id="sumShip"></span></div>
+            <div class="sum-row sum-row--total"><span>ยอดชำระทั้งหมด</span><b id="sumTotal"></b></div>
+            <p class="fine" id="sumVat"></p>
+          </div>
+          <p class="demo-note">ราคาจำลอง · รอยืนยันราคาจริง</p>
+        </details>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===== PromptPay ===== -->
+  <section class="pay-screen" id="ppScreen" hidden>
+    <div class="pp-card">
+      <header class="pp-card__head"><b>พร้อมเพย์ (PromptPay)</b><span>QR ตัวอย่าง · สแกนแล้วไม่มีการตัดเงิน</span></header>
+      <div class="pp-card__qr" id="ppQr"></div>
+      <p class="pp-card__amt" id="ppAmt"></p>
+      <p class="pp-card__to">ชำระให้ <b>บจก. ยูเอส แคมป์ (ตัวอย่าง)</b></p>
+      <p class="pp-card__timer">QR หมดอายุใน <b id="ppTimer">15:00</b></p>
+    </div>
+    <div class="pay-side">
+      <p class="eyebrow">คำสั่งซื้อ <span id="ppNo"></span></p>
+      <h1>สแกนเพื่อชำระเงิน</h1>
+      <ol class="howto"><li>เปิดแอปธนาคารหรือแอปเป๋าตัง</li><li>เลือก “สแกน QR” แล้วสแกนรหัสด้านซ้าย</li><li>ตรวจยอดเงินและชื่อผู้รับ แล้วยืนยันการโอน</li></ol>
+      <button class="btn btn--ink btn--block" id="ppCheck">ฉันชำระแล้ว · ตรวจสอบการชำระ (จำลอง)</button>
+      <button class="btn btn--line btn--block btn--sm" id="ppSwitch">เปลี่ยนเป็นโอนผ่านธนาคาร</button>
+      <p class="fine">ในระบบจริง QR นี้จะสร้างจาก PromptPay ID ของร้าน และยืนยันอัตโนมัติผ่านผู้ให้บริการชำระเงิน</p>
+    </div>
+  </section>
+
+  <!-- ===== Bank transfer ===== -->
+  <section class="pay-screen" id="trScreen" hidden>
+    <div class="pay-side pay-side--wide">
+      <p class="eyebrow">คำสั่งซื้อ <span id="trNo"></span></p>
+      <h1>โอนเงิน <span id="trAmt"></span></h1>
+      <p>โอนเข้าบัญชีใดบัญชีหนึ่งด้านล่าง แล้วแนบสลิปเพื่อให้ร้านตรวจสอบ</p>
+      <div class="banks" id="banks"></div>
+      <form class="slip" id="slipForm" novalidate>
+        <label class="drop" for="slipFile" id="drop">
+          <input type="file" id="slipFile" accept="image/*" />
+          <span class="drop__empty"><b>แนบสลิปการโอน</b><small>แตะเพื่อเลือกรูป หรือลากไฟล์มาวาง (JPG/PNG)</small></span>
+          <img id="slipPreview" alt="ตัวอย่างสลิป" hidden />
+        </label>
+        <div class="f-grid">
+          <label class="f" for="slipTime">วัน–เวลาที่โอน<input id="slipTime" type="datetime-local" /></label>
+          <label class="f" for="slipBank">โอนจากธนาคาร<select id="slipBank"><option>กสิกรไทย</option><option>ไทยพาณิชย์</option><option>กรุงเทพ</option><option>กรุงไทย</option><option>กรุงศรี</option><option>ทหารไทยธนชาต</option><option>ออมสิน</option><option>อื่นๆ</option></select></label>
+        </div>
+        <p class="err" id="slipErr" hidden>แนบรูปสลิปก่อนส่ง</p>
+        <button class="btn btn--ink btn--block" type="submit">ส่งสลิปให้ร้านตรวจสอบ</button>
+      </form>
+      <div class="contact-card">
+        <b>ยืนยันกับร้านโดยตรงได้</b>
+        <span>ส่งสลิปพร้อมเลขคำสั่งซื้อทาง LINE <b class="sel">@uscamp</b> หรือโทร <b class="sel">0X-XXX-XXXX</b> (ข้อมูลตัวอย่าง)</span>
+        <button class="btn btn--line btn--sm" type="button" id="trLater">ส่งสลิปภายหลัง</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Card OTP (3-D Secure simulation) ===== -->
+  <dialog class="otp" id="otp" aria-labelledby="otpTitle">
+    <p class="otp__bank">ธนาคารผู้ออกบัตร (จำลอง)</p>
+    <h2 id="otpTitle">ยืนยันการชำระเงิน</h2>
+    <p>ส่งรหัส OTP ไปที่เบอร์ <b id="otpPhone"></b> แล้ว<br/>ยอดชำระ <b id="otpAmt"></b></p>
+    <label class="f" for="otpCode">รหัส OTP 6 หลัก <i>(ทดสอบ: 123456)</i><input id="otpCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code" /></label>
+    <p class="err" id="otpErr" hidden>รหัส OTP ไม่ถูกต้อง ลองใหม่อีกครั้ง</p>
+    <div class="co-actions"><button class="btn btn--line btn--sm" id="otpCancel" type="button">ยกเลิก</button><button class="btn btn--ink" id="otpOk" type="button">ยืนยัน</button></div>
+  </dialog>
+  <div class="busy" id="busy" hidden><div class="spinner"></div><p id="busyMsg">กำลังดำเนินการ…</p></div>
+
+  <!-- ===== Done ===== -->
+  <section class="done" id="doneScreen" hidden>
+    <div class="done__icon"><svg viewBox="0 0 40 40"><use href="#star"/></svg></div>
+    <p class="eyebrow">คำสั่งซื้อจำลอง</p>
+    <h1 class="display" id="doneTitle">Thank you!</h1>
+    <p class="done__lead" id="doneLead"></p>
+    <div class="done__no"><span>เลขคำสั่งซื้อ</span><b id="doneNo"></b><button class="link-btn" id="copyNo">คัดลอก</button></div>
+    <div class="done__grid">
+      <div><p class="lbl">สถานะการชำระเงิน</p><p id="donePay"></p></div>
+      <div><p class="lbl">การจัดส่ง</p><p id="doneShip"></p></div>
+      <div><p class="lbl">ยอดชำระ</p><p id="doneTotal"></p></div>
+    </div>
+    <div class="co-actions co-actions--center"><a class="btn btn--ink" id="doneTrack" href="track.html">ติดตามคำสั่งซื้อ</a><a class="btn btn--line" href="shop.html">กลับไปที่ร้านค้า</a></div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="js/data.js?v=20261108d"></script>
+<script src="js/shop/catalog.js?v=20261108d"></script>
+<script src="js/shop/store.js?v=20261108d"></script>
+<script src="js/shop/ui.js?v=20261108d"></script>
+<script src="js/shop/checkout.js?v=20261108d"></script>
+<script src="js/thai-wrap.js?v=20261108d"></script>
+</body>
+</html>

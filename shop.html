@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>US Camp Shop</title>
+  <meta name="description" content="ร้านค้า US Camp (โหมดสาธิต) — เต้นท์ Springbar® และอุปกรณ์เสริม ราคาจำลอง" />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#1F1A14" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Ultra&family=Jost:wght@300;400;500;600&family=Yellowtail&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=20261108d" />
+  <link rel="stylesheet" href="css/shop.css?v=20261108d" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231F1A14'/%3E%3Cpath d='M12 50 L20 18 H44 L52 50 Z' fill='%23B98D57'/%3E%3Cpath d='M18 18 H46' stroke='%23E6E1D6' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M28 50 L32 28 L36 50Z' fill='%231F1A14'/%3E%3C/svg%3E" />
+</head>
+<body class="commerce">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="star" viewBox="0 0 40 40"><path d="M20 2 L23 14 L34 8 L27 18 L38 20 L27 22 L34 32 L23 26 L20 38 L17 26 L6 32 L13 22 L2 20 L13 18 L6 8 L17 14 Z" fill="currentColor"/></symbol>
+  <symbol id="logo" viewBox="0 0 220 64"><path d="M4 14 Q110 2 216 14 L216 20 Q110 10 4 20 Z" fill="currentColor"/><use href="#star" x="102" y="20" width="16" height="16"/><text x="110" y="58" text-anchor="middle" font-family="Ultra, serif" font-size="27" letter-spacing="2" fill="currentColor">US CAMP</text></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20.5" r="1.4" fill="currentColor"/><circle cx="17.5" cy="20.5" r="1.4" fill="currentColor"/></symbol>
+</svg>
+
+<header class="nav is-solid" id="nav">
+  <div class="nav__strip demo-strip"><span>★ โหมดสาธิต · ราคาจำลอง · ยังไม่เปิดขายจริง ★</span></div>
+  <div class="nav__bar">
+    <a href="index.html" class="nav__logo" aria-label="US Camp หน้าแรก"><svg><use href="#logo"/></svg></a>
+    <nav class="nav__links" id="navLinks">
+      <a href="index.html">หน้าแรก</a>
+      <a href="shop.html" class="is-current">ร้านค้า</a>
+      <a href="track.html">ติดตามคำสั่งซื้อ</a>
+      <a href="index.html#visit">นัดลองเต้นท์</a>
+    </nav>
+    <button class="nav__cart" data-open-cart aria-label="เปิดตะกร้าสินค้า"><svg><use href="#i-cart"/></svg><b data-cart-count hidden>0</b></button>
+    <button class="nav__burger" id="burger" aria-label="เปิดเมนู" aria-expanded="false"><span></span><span></span></button>
+  </div>
+</header>
+
+<main class="shop">
+  <section class="shop-head">
+    <div class="wrap">
+      <p class="eyebrow">US Camp Shop · โหมดสาธิต</p>
+      <h1 class="display">The Camp Store</h1>
+      <p class="shop-head__lead">เต้นท์ Springbar® ทุกรุ่นทุกสี พร้อมอุปกรณ์ที่ทำให้แคมป์สมบูรณ์ เลือกลงตะกร้า แล้วเลือกรับที่ร้านหรือให้เราจัดส่งถึงบ้าน</p>
+      <div class="notice" role="note">
+        <b>ระบบนี้เป็นตัวอย่างเพื่อทดสอบประสบการณ์สั่งซื้อ</b>
+        <span>ราคาทั้งหมดเป็นราคาจำลอง รอยืนยันราคาจริง ยังไม่มีการตัดเงินหรือจัดส่งจริง</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap catalog">
+    <div class="catalog__bar">
+      <div class="tabs" id="catTabs" role="tablist" aria-label="หมวดสินค้า"></div>
+      <label class="sort">เรียงตาม
+        <select id="sortSel">
+          <option value="featured">แนะนำ</option>
+          <option value="low">ราคาต่ำ → สูง</option>
+          <option value="high">ราคาสูง → ต่ำ</option>
+        </select>
+      </label>
+    </div>
+    <div class="grid" id="grid" aria-live="polite"></div>
+  </section>
+
+  <section class="wrap perks" aria-label="บริการ">
+    <div><b>รับที่ร้าน</b><span>มารับเองพร้อมสอนกางเต้นท์</span></div>
+    <div><b>ส่งทั่วไทย</b><span>ฟรีเมื่อสั่งครบ ฿20,000</span></div>
+    <div><b>ชำระได้หลายช่องทาง</b><span>บัตร · พร้อมเพย์ · โอนธนาคาร</span></div>
+    <div><b>ติดตามพัสดุ</b><span>ดูสถานะได้ทุกขั้นตอน</span></div>
+  </section>
+</main>
+
+<dialog class="pd" id="pd" aria-labelledby="pdName">
+  <button class="icon-btn pd__close" id="pdClose" aria-label="ปิด">✕</button>
+  <div class="pd__grid">
+    <div class="pd__media">
+      <div class="pd__stage"><img id="pdImg" src="" alt="" /></div>
+      <div class="pd__thumbs" id="pdThumbs"></div>
+    </div>
+    <div class="pd__info">
+      <p class="eyebrow" id="pdCat"></p>
+      <h2 id="pdName"></h2>
+      <p class="pd__tag script" id="pdTag"></p>
+      <p class="pd__price"><span id="pdPrice"></span><small>ราคาจำลอง</small></p>
+      <p class="pd__desc" id="pdDesc"></p>
+      <div id="pdVariants"></div>
+      <div class="pd__buy">
+        <div class="qty qty--lg" role="group" aria-label="จำนวน">
+          <button id="pdMinus" aria-label="ลดจำนวน">−</button><output id="pdQty">1</output><button id="pdPlus" aria-label="เพิ่มจำนวน">+</button>
+        </div>
+        <button class="btn btn--ink" id="pdAdd">เพิ่มลงตะกร้า</button>
+      </div>
+      <button class="btn btn--line btn--block" id="pdBuyNow">ซื้อเลย</button>
+      <dl class="pd__specs" id="pdSpecs"></dl>
+      <p class="pd__lead" id="pdLead"></p>
+    </div>
+  </div>
+</dialog>
+
+<footer class="footer footer--slim">
+  <div class="footer__cols">
+    <div><svg class="footer__logo"><use href="#logo"/></svg></div>
+    <div><h4>ร้านค้า</h4><a href="shop.html">สินค้าทั้งหมด</a><a href="checkout.html">ชำระเงิน</a><a href="track.html">ติดตามคำสั่งซื้อ</a></div>
+    <div><h4>ติดต่อ</h4><p>LINE @uscamp · hello@uscamp.co</p><p>(ข้อมูลติดต่อตัวอย่าง)</p></div>
+  </div>
+  <p class="footer__legal">โหมดสาธิต: ราคา สต็อก และการชำระเงินทั้งหมดเป็นการจำลอง ยังไม่มีการซื้อขายจริง · Springbar® is a registered trademark of its respective owner. Product photography © Springbar®.</p>
+</footer>
+
+<script src="js/data.js?v=20261108d"></script>
+<script src="js/shop/catalog.js?v=20261108d"></script>
+<script src="js/shop/store.js?v=20261108d"></script>
+<script src="js/shop/ui.js?v=20261108d"></script>
+<script src="js/shop/shop.js?v=20261108d"></script>
+<script src="js/thai-wrap.js?v=20261108d"></script>
+</body>
+</html>

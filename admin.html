@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>US Camp Admin</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#1F1A14" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Ultra&family=Jost:wght@300;400;500;600&family=Yellowtail&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=20261108d" />
+  <link rel="stylesheet" href="css/shop.css?v=20261108d" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231F1A14'/%3E%3Cpath d='M12 50 L20 18 H44 L52 50 Z' fill='%23B98D57'/%3E%3C/svg%3E" />
+</head>
+<body class="commerce admin-page">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="star" viewBox="0 0 40 40"><path d="M20 2 L23 14 L34 8 L27 18 L38 20 L27 22 L34 32 L23 26 L20 38 L17 26 L6 32 L13 22 L2 20 L13 18 L6 8 L17 14 Z" fill="currentColor"/></symbol>
+  <symbol id="logo" viewBox="0 0 220 64"><path d="M4 14 Q110 2 216 14 L216 20 Q110 10 4 20 Z" fill="currentColor"/><use href="#star" x="102" y="20" width="16" height="16"/><text x="110" y="58" text-anchor="middle" font-family="Ultra, serif" font-size="27" letter-spacing="2" fill="currentColor">US CAMP</text></symbol>
+</svg>
+
+<header class="nav is-solid" id="nav">
+  <div class="nav__strip demo-strip"><span>★ หน้าผู้ดูแลร้าน · โหมดสาธิต · ข้อมูลอยู่ในเบราว์เซอร์นี้เท่านั้น ★</span></div>
+  <div class="nav__bar">
+    <a href="index.html" class="nav__logo" aria-label="US Camp หน้าแรก"><svg><use href="#logo"/></svg></a>
+    <span class="admin-tag">Admin</span>
+    <nav class="nav__links" id="navLinks">
+      <a href="shop.html">ร้านค้า</a>
+      <a href="track.html">หน้าติดตาม (ลูกค้า)</a>
+      <a href="#" id="logout">ออกจากระบบ</a>
+    </nav>
+    <button class="nav__burger" id="burger" aria-label="เปิดเมนู" aria-expanded="false"><span></span><span></span></button>
+  </div>
+</header>
+
+<main class="wrap admin">
+  <section class="gate" id="gate">
+    <h1 class="display">Back Office</h1>
+    <p>หน้าจัดการคำสั่งซื้อสำหรับร้าน (จำลอง) ระบบจริงต้องมีการล็อกอินฝั่งเซิร์ฟเวอร์</p>
+    <form id="gateForm" class="track-form" novalidate>
+      <label class="f" for="gCode">รหัสผ่านสาธิต<input id="gCode" type="password" autocomplete="off" placeholder="พิมพ์ demo" /></label>
+      <button class="btn btn--ink" type="submit">เข้าสู่ระบบ</button>
+    </form>
+    <p class="err" id="gErr" hidden>รหัสไม่ถูกต้อง (รหัสสาธิตคือ demo)</p>
+  </section>
+
+  <section id="app" hidden>
+    <header class="ad-head">
+      <div><p class="eyebrow">Orders</p><h1>คำสั่งซื้อ</h1></div>
+      <div class="ad-tools">
+        <button class="btn btn--line btn--sm" id="seed">+ สร้างคำสั่งซื้อตัวอย่าง</button>
+        <button class="btn btn--line btn--sm danger" id="wipe">ล้างข้อมูลสาธิต</button>
+      </div>
+    </header>
+    <div class="kpis" id="kpis"></div>
+    <div class="ad-bar">
+      <div class="tabs" id="filters" role="tablist" aria-label="กรองสถานะ"></div>
+      <label class="search" for="q"><span class="sr-only">ค้นหา</span><input id="q" type="search" placeholder="ค้นหาเลขคำสั่งซื้อ ชื่อ หรือเบอร์โทร" /></label>
+    </div>
+    <div class="orders" id="orders"></div>
+  </section>
+</main>
+
+<div class="drawer drawer--wide" id="od" hidden>
+  <div class="drawer__scrim" data-close-od></div>
+  <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="odNo">
+    <header class="drawer__head">
+      <div><h2 id="odNo"></h2><p class="tv-date" id="odDate"></p></div>
+      <button class="icon-btn" data-close-od aria-label="ปิด">✕</button>
+    </header>
+    <div class="drawer__body od" id="odBody"></div>
+  </aside>
+</div>
+
+<dialog class="lightbox" id="lightbox"><img id="lbImg" alt="สลิปการโอน" /><button class="icon-btn" id="lbClose" aria-label="ปิด">✕</button></dialog>
+
+<script src="js/data.js?v=20261108d"></script>
+<script src="js/shop/catalog.js?v=20261108d"></script>
+<script src="js/shop/store.js?v=20261108d"></script>
+<script src="js/shop/ui.js?v=20261108d"></script>
+<script src="js/shop/admin.js?v=20261108d"></script>
+<script src="js/thai-wrap.js?v=20261108d"></script>
+</body>
+</html>
