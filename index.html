@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>US Camp — Classic Canvas, Modern Wild</title>
+  <meta name="description" content="US Camp — บ้านของเต้นท์ผ้าแคนวาสสไตล์อเมริกัน Springbar® ดูเต้นท์แบบ 360° และออกแบบแคมป์ในฝันของคุณได้ในที่เดียว" />
+  <meta name="theme-color" content="#EFE6D3" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Ultra&family=Jost:wght@300;400;500;600&family=Yellowtail&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231F1A14'/%3E%3Cpath d='M10 48 L32 16 L54 48 Z' fill='%23C9A06A'/%3E%3Cpath d='M27 48 L32 30 L37 48Z' fill='%231F1A14'/%3E%3Cpath d='M8 18 Q32 12 56 18' stroke='%23EFE6D3' stroke-width='4' fill='none'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+<!-- ============ INTRO ============ -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro__inner">
+    <svg class="intro__bar" viewBox="0 0 600 60"><path d="M10 50 Q300 8 590 50" /></svg>
+    <svg class="intro__star" viewBox="0 0 40 40"><use href="#star" /></svg>
+    <div class="intro__word"><span>U</span><span>S</span><span>&nbsp;</span><span>C</span><span>A</span><span>M</span><span>P</span></div>
+    <div class="intro__sub">Classic Canvas &nbsp;★&nbsp; Modern Wild</div>
+  </div>
+</div>
+
+<!-- shared symbols -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="star" viewBox="0 0 40 40"><path d="M20 2 L23 14 L34 8 L27 18 L38 20 L27 22 L34 32 L23 26 L20 38 L17 26 L6 32 L13 22 L2 20 L13 18 L6 8 L17 14 Z" fill="currentColor"/></symbol>
+  <symbol id="logo" viewBox="0 0 220 64">
+    <path d="M4 14 Q110 2 216 14 L216 20 Q110 10 4 20 Z" fill="currentColor"/>
+    <use href="#star" x="102" y="20" width="16" height="16"/>
+    <text x="110" y="58" text-anchor="middle" font-family="Ultra, serif" font-size="27" letter-spacing="2" fill="currentColor">US CAMP</text>
+  </symbol>
+</svg>
+
+<!-- ============ HEADER ============ -->
+<header class="nav" id="nav">
+  <div class="nav__strip">
+    <span>★ Springbar® canvas tents — now pitching in Thailand ★</span>
+    <span class="hide-sm">Book a Pitch Day at our showroom</span>
+  </div>
+  <div class="nav__bar">
+    <a href="#top" class="nav__logo" aria-label="US Camp home"><svg><use href="#logo"/></svg></a>
+    <nav class="nav__links" id="navLinks">
+      <a href="#story">Our Story</a>
+      <a href="#day">A Day at Camp</a>
+      <a href="#studio">360° Studio</a>
+      <a href="#build">Build Your Camp</a>
+      <a href="#visit">Pitch Day</a>
+    </nav>
+    <a href="#build" class="btn btn--ink btn--sm hide-sm">Build My Camp</a>
+    <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <div class="hero__scene" id="heroScene" aria-hidden="true">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
+      <defs>
+        <linearGradient id="hSky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#7FA6B8"/>
+          <stop offset=".55" stop-color="#E9D3A8"/>
+          <stop offset="1" stop-color="#F2C489"/>
+        </linearGradient>
+        <radialGradient id="hFire"><stop offset="0" stop-color="#FFC86B" stop-opacity=".85"/><stop offset="1" stop-color="#FF8A3D" stop-opacity="0"/></radialGradient>
+        <clipPath id="sunClip"><circle cx="1180" cy="470" r="120"/></clipPath>
+      </defs>
+      <rect width="1600" height="900" fill="url(#hSky)"/>
+      <g data-depth=".05">
+        <g clip-path="url(#sunClip)">
+          <rect x="1040" y="330" width="280" height="280" fill="#F7E6BC"/>
+          <g fill="#F2C489"><rect x="1040" y="520" width="280" height="8"/><rect x="1040" y="542" width="280" height="10"/><rect x="1040" y="566" width="280" height="13"/></g>
+        </g>
+        <g class="birds" fill="none" stroke="#3B3127" stroke-width="2.4" stroke-linecap="round">
+          <path d="M420 230 q10 -10 20 0 q10 -10 20 0"/><path d="M480 200 q8 -8 16 0 q8 -8 16 0"/><path d="M380 270 q7 -7 14 0 q7 -7 14 0"/>
+        </g>
+      </g>
+      <g data-depth=".12">
+        <path d="M0 600 L120 560 L260 585 L420 520 L560 560 L700 505 L880 555 L1000 520 L1180 560 L1340 510 L1600 560 V900 H0Z" fill="#C79A7C" opacity=".55"/>
+      </g>
+      <g data-depth=".22">
+        <path d="M-20 660 L60 660 L80 590 L230 590 L250 630 L330 630 L345 610 L440 610 L470 660 L1600 660 V900 H-20Z" fill="#B4532A"/>
+        <path d="M80 590 L230 590 L234 604 L84 604Z" fill="#8F3E1F"/>
+        <path d="M1050 640 L1090 520 L1140 515 L1160 470 L1330 470 L1350 520 L1420 525 L1460 640Z" fill="#A9482A"/>
+        <path d="M1160 470 L1330 470 L1334 488 L1164 488Z" fill="#8A3A1C"/>
+      </g>
+      <g data-depth=".35">
+        <path d="M0 700 Q300 640 640 680 T1300 660 T1600 690 V900 H0Z" fill="#CF8E5A"/>
+      </g>
+      <g data-depth=".55">
+        <path d="M0 760 Q400 720 900 745 T1600 735 V900 H0Z" fill="#A65A33"/>
+        <!-- juniper -->
+        <g id="heroTree" transform="translate(1250 6)" stroke="#3B2A1E" stroke-linecap="round" fill="none">
+          <path d="M260 770 C250 700 270 640 230 590 M250 690 C290 650 320 640 340 600 M240 650 C200 630 180 600 170 560 M245 620 C260 590 300 580 300 540 M232 592 C220 560 230 530 210 500" stroke-width="7"/>
+          <path d="M340 600 l20 -20 M300 540 l14 -24 M170 560 l-18 -12 M210 500 l-10 -20 M300 540 l-20 -14" stroke-width="3"/>
+        </g>
+        <!-- sage brush -->
+        <g fill="#8C9479"><ellipse cx="160" cy="772" rx="48" ry="20"/><ellipse cx="1380" cy="770" rx="60" ry="22"/><ellipse cx="1470" cy="780" rx="34" ry="14"/><ellipse cx="420" cy="790" rx="30" ry="12"/></g>
+        <!-- tent -->
+        <g class="hero__tent" style="--wall:#C9A06A;--wall-shade:#A98250;--roof:#F1EBDD;--roof-shade:#D9D1BF" transform="translate(1000 800) scale(1.42)" id="heroTent"></g>
+        <!-- campfire -->
+        <g id="heroFire" transform="translate(800 812)">
+          <circle r="90" fill="url(#hFire)" class="flicker"/>
+          <path d="M-22 6 L22 -4 M-22 -4 L22 6" stroke="#4A3020" stroke-width="7" stroke-linecap="round"/>
+          <path class="flame" d="M0 -2 C-14 -16 -6 -30 0 -46 C6 -30 16 -18 0 -2Z" fill="#F59A3B"/>
+          <path class="flame f2" d="M0 -2 C-7 -10 -3 -20 0 -28 C3 -20 8 -12 0 -2Z" fill="#FFD27A"/>
+          <g class="smoke smoke--fire"><circle cx="0" cy="-70" r="10"/><circle cx="8" cy="-100" r="14"/><circle cx="-4" cy="-136" r="18"/></g>
+        </g>
+        <!-- chairs -->
+        <g fill="none" stroke="#2D251D" stroke-width="5" stroke-linecap="round">
+          <g id="heroChair"><path d="M640 830 l14 -50 l46 0 l10 50 M650 800 h56"/><path d="M654 780 l-6 -40 h50 l2 40" stroke="#6E3D26" stroke-width="9"/></g>
+        </g>
+        <!-- cooler -->
+        <g id="heroCooler" transform="translate(1180 840)"><rect x="-34" y="-36" width="68" height="40" rx="4" fill="#F1EBDD"/><rect x="-34" y="-40" width="68" height="10" rx="3" fill="#DDD3BF"/><rect x="-10" y="-22" width="20" height="5" fill="#3B3631"/></g>
+      </g>
+      <g data-depth=".8">
+        <path d="M0 860 Q500 820 1000 850 T1600 845 V900 H0Z" fill="#7C3F22"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero__copy">
+    <p class="script reveal" data-delay="1">Since the spirit of 1961</p>
+    <h1 class="display hero__title split">Pitch it like<br/>it's 1961.</h1>
+    <p class="hero__lead reveal" data-delay="3">เต้นท์ผ้าแคนวาสโครงสปริงบาร์จาก Salt Lake City — กางครั้งเดียวก็รู้ว่าทำไมแคมเปอร์อเมริกันส่งต่อมันจากรุ่นพ่อสู่รุ่นลูก <br class="hide-sm"/>วันนี้ US Camp พาวิถีนั้นมาถึงลานกางของคุณ</p>
+    <div class="hero__cta reveal" data-delay="4">
+      <a href="#build" class="btn btn--ink">ออกแบบแคมป์ของคุณ</a>
+      <a href="#studio" class="btn btn--line">หมุนดูเต้นท์ 360°</a>
+    </div>
+  </div>
+
+  <div class="hero__badge" aria-hidden="true">
+    <svg viewBox="0 0 200 200">
+      <defs><path id="circ" d="M100 100 m-74 0 a74 74 0 1 1 148 0 a74 74 0 1 1 -148 0"/></defs>
+      <text><textPath href="#circ">US CAMP ★ CLASSIC CANVAS ★ MODERN WILD ★ </textPath></text>
+      <use href="#star" x="80" y="80" width="40" height="40"/>
+    </svg>
+  </div>
+  <a href="#story" class="hero__scroll" aria-label="Scroll to story"><span>Scroll</span><i></i></a>
+</section>
+
+<!-- marquee -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>Cotton Duck Canvas</span><b>★</b><span>Spring Bar Tension Frame</span><b>★</b><span>Salt Lake City · Est. 1961</span><b>★</b><span>Built to Be Handed Down</span><b>★</b><span>Pitch It · Live It · Pass It On</span><b>★</b>
+    <span>Cotton Duck Canvas</span><b>★</b><span>Spring Bar Tension Frame</span><b>★</b><span>Salt Lake City · Est. 1961</span><b>★</b><span>Built to Be Handed Down</span><b>★</b><span>Pitch It · Live It · Pass It On</span><b>★</b>
+  </div>
+</div>
+
+<!-- ============ STORY ============ -->
+<section class="story" id="story">
+  <header class="section-head">
+    <p class="eyebrow">Chapter One</p>
+    <h2 class="display split">The Long Way Home</h2>
+    <p class="section-head__lead reveal">เรื่องเล่าของเต้นท์หลังหนึ่ง ที่ไม่เคยรีบตามเทรนด์ — เพราะมันถูกสร้างมาให้อยู่นานกว่านั้น</p>
+  </header>
+
+  <div class="story__wrap">
+    <div class="story__visual" id="storyVisual">
+      <figure class="frame is-active" data-chapter="0">
+        <img src="assets/img/workshop.jpg" alt="เต้นท์ Springbar สีน้ำตาลถูกกางอยู่ในเวิร์กช็อปเย็บผ้าใบ" loading="lazy" />
+        <figcaption>The workshop · Salt Lake City</figcaption>
+      </figure>
+      <figure class="frame frame--diagram" data-chapter="1">
+        <svg viewBox="0 0 500 400" class="diagram" id="springDiagram">
+          <g class="dg-ground"><path d="M20 340 H480" /></g>
+          <g class="dg-tent">
+            <path d="M90 340 L130 200 L250 120 L370 200 L410 340 Z" class="dg-canvas"/>
+            <path d="M130 200 L250 120 L370 200" class="dg-roof"/>
+          </g>
+          <path class="dg-bar" d="M70 205 Q250 160 430 205"/>
+          <path class="dg-pole" d="M250 340 V112"/>
+          <path class="dg-pole" d="M86 344 L130 200 M414 344 L370 200"/>
+          <g class="dg-arrows"><path d="M70 230 l-20 0 m8 -7 l-8 7 l8 7"/><path d="M430 230 l20 0 m-8 -7 l8 7 l-8 7"/></g>
+          <g class="dg-labels">
+            <text x="250" y="150" text-anchor="middle">SPRING BAR</text>
+            <text x="250" y="168" text-anchor="middle" class="th">เหล็กสปริงดึงผ้าให้ตึงทั้งหลัง</text>
+            <text x="250" y="375" text-anchor="middle">TENSION = STRENGTH</text>
+          </g>
+        </svg>
+        <figcaption>The spring bar · ความตึงคือความแข็งแรง</figcaption>
+      </figure>
+      <figure class="frame" data-chapter="2">
+        <img src="assets/img/forest.jpg" alt="เต้นท์ผ้าแคนวาสสีน้ำตาลท่ามกลางป่าเขียว" loading="lazy" />
+        <figcaption>Canvas that breathes</figcaption>
+      </figure>
+      <figure class="frame" data-chapter="3">
+        <img src="assets/img/campground.jpg" alt="แถวเต้นท์ผ้าแคนวาสในลานกางท่ามกลางต้นไม้และภูเขา" loading="lazy" />
+        <figcaption>One tent, many generations</figcaption>
+      </figure>
+      <div class="story__counter"><span id="storyNum">01</span> / 04</div>
+    </div>
+
+    <div class="story__chapters">
+      <article class="chapter" data-chapter="0">
+        <span class="chapter__year">1961</span>
+        <h3>Made by hand in Salt Lake City</h3>
+        <p>จุดเริ่มต้นไม่ใช่โรงงานใหญ่ แต่เป็นโต๊ะเย็บผ้า เข็ม ด้าย และครอบครัวหนึ่งในยูทาห์ที่อยากได้เต้นท์ซึ่ง “กางง่ายและอยู่ได้จริง” สำหรับการออกไปใช้ชีวิตกลางแจ้งแบบอเมริกัน</p>
+        <p class="muted">ทุกวันนี้ Springbar® ยังผลิตด้วยหลักคิดเดิม: ทำครั้งเดียว ให้ใช้ได้เป็นสิบปี</p>
+      </article>
+      <article class="chapter" data-chapter="1">
+        <span class="chapter__year">The Frame</span>
+        <h3>One bar. Total tension.</h3>
+        <p>หัวใจของเต้นท์คือ <strong>Spring Bar</strong> — เหล็กสปริงที่ดึงผ้าแคนวาสให้ตึงจากมุมถึงมุม ผลคือเต้นท์ทรงสูงโปร่ง ยืนเดินในเต้นท์ได้สบาย และต้านลมได้มั่นคงโดยไม่ต้องมีเสาระโยงระยางเต็มพื้นที่</p>
+        <ul class="ticks">
+          <li>โครงเรียบง่าย กางได้เร็วเมื่อลองครั้งแรก</li>
+          <li>ผนังตั้งชัน ใช้พื้นที่ภายในได้เต็ม</li>
+          <li>ผ้าตึงเสมอ — ไม่สะบัดเสียงดังเวลาลมแรง</li>
+        </ul>
+      </article>
+      <article class="chapter" data-chapter="2">
+        <span class="chapter__year">The Canvas</span>
+        <h3>Cool by day. Warm by night.</h3>
+        <p>ผ้า Cotton Duck Canvas หายใจได้ ระบายความชื้นได้ดีกว่าผ้าสังเคราะห์ กลางวันจึงเย็นสบาย กลางคืนอบอุ่น และไอน้ำเกาะภายในน้อยลง — เหมาะกับอากาศร้อนชื้นแบบบ้านเรามากกว่าที่คิด</p>
+        <p class="muted">ยิ่งใช้ ผ้ายิ่งนุ่ม สียิ่งมีเรื่องเล่า — แบบเดียวกับแจ็คเก็ตยีนส์ตัวโปรด</p>
+      </article>
+      <article class="chapter" data-chapter="3">
+        <span class="chapter__year">The Legacy</span>
+        <h3>Built to be handed down.</h3>
+        <p>ในอเมริกา เต้นท์ Springbar หลายหลังถูกส่งต่อจากพ่อสู่ลูก จากทริปแรกของครอบครัวสู่ทริปของหลาน มันไม่ใช่อุปกรณ์ที่ซื้อแล้วทิ้ง — มันคือบ้านหลังที่สองที่พับเก็บได้</p>
+        <a href="#day" class="link-arrow">ดูว่าหนึ่งวันในแคมป์เป็นอย่างไร →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ A DAY AT CAMP ============ -->
+<section class="day" id="day" data-time="dawn">
+  <div class="day__sky" aria-hidden="true"></div>
+  <header class="section-head section-head--light">
+    <p class="eyebrow">Chapter Two</p>
+    <h2 class="display split">A Day at Camp</h2>
+    <p class="section-head__lead reveal">กดเลือกช่วงเวลา แล้วลองนึกภาพว่าคุณอยู่ตรงนั้น</p>
+  </header>
+
+  <div class="day__tabs" role="tablist" aria-label="ช่วงเวลา">
+    <button role="tab" class="day__tab is-active" data-time="dawn" aria-selected="true"><span>05:48</span>Dawn</button>
+    <button role="tab" class="day__tab" data-time="noon" aria-selected="false"><span>12:30</span>High Noon</button>
+    <button role="tab" class="day__tab" data-time="golden" aria-selected="false"><span>17:52</span>Golden Hour</button>
+    <button role="tab" class="day__tab" data-time="night" aria-selected="false"><span>21:15</span>Fireside</button>
+    <i class="day__progress" id="dayProgress"></i>
+  </div>
+
+  <div class="day__stage">
+    <div class="day__photos">
+      <figure class="postcard is-active" data-time="dawn"><img src="assets/img/forest.jpg" alt="เต้นท์ในป่ายามเช้า" loading="lazy"/></figure>
+      <figure class="postcard" data-time="noon"><img src="assets/img/campground.jpg" alt="ลานกางเต้นท์ยามกลางวัน" loading="lazy"/></figure>
+      <figure class="postcard" data-time="golden"><img src="assets/img/canyon.jpg" alt="เต้นท์บนหน้าผาแคนยอนยามเย็น" loading="lazy"/></figure>
+      <figure class="postcard" data-time="night"><img src="assets/img/interior.jpg" alt="ภายในเต้นท์อบอุ่นด้วยเตาฟืนและพรม" loading="lazy"/></figure>
+      <div class="postcard__stamp" aria-hidden="true"><svg viewBox="0 0 80 80"><rect x="4" y="4" width="72" height="72" fill="none" stroke="currentColor" stroke-dasharray="3 3" stroke-width="2"/><use href="#star" x="22" y="18" width="36" height="36"/><text x="40" y="68" text-anchor="middle">US CAMP</text></svg></div>
+    </div>
+
+    <div class="day__story">
+      <article class="moment is-active" data-time="dawn">
+        <p class="script">05:48 — first light</p>
+        <h3>ตื่นมาพร้อมแสงที่ลอดผ่านผ้าแคนวาส</h3>
+        <p>ผ้าใบเปลี่ยนเป็นสีน้ำผึ้งอ่อนๆ ตอนพระอาทิตย์ขึ้น ไม่มีไอน้ำหยดใส่หน้า มีแค่กลิ่นสนกับเสียงนกที่ค่อยๆ ดังขึ้น ต้มกาแฟบนเตาเล็กหน้าประตูเต้นท์ แล้วนั่งดูหมอกจางไป</p>
+        <ul class="senses"><li><b>Sound</b> นกป่า · ลมผ่านยอดสน</li><li><b>Scent</b> กาแฟคั่ว · ไม้สน</li><li><b>Feel</b> 16°C ผ้าห่มขนสัตว์</li></ul>
+      </article>
+      <article class="moment" data-time="noon">
+        <p class="script">12:30 — high sun</p>
+        <h3>ร่มเงาใต้ Awning คือห้องนั่งเล่นของแคมป์</h3>
+        <p>พับแผงหน้าต่างขึ้น ปล่อยลมพัดผ่าน ผ้าฝ้ายระบายความร้อนได้ดีจนข้างในยังนั่งเล่นได้สบาย ข้างนอกใต้ Awning คือโต๊ะไม้ เก้าอี้ผ้าใบ และกระติกน้ำแข็งที่เย็นทั้งวัน</p>
+        <ul class="senses"><li><b>Sound</b> เสียงหัวเราะ · ไพ่ป๊อก</li><li><b>Scent</b> ครีมกันแดด · ผ้าใบอุ่นแดด</li><li><b>Feel</b> ลมโชย ร่มเย็น</li></ul>
+      </article>
+      <article class="moment" data-time="golden">
+        <p class="script">17:52 — golden hour</p>
+        <h3>เต้นท์กลายเป็นส่วนหนึ่งของภูมิทัศน์</h3>
+        <p>สีแทนของผ้าแคนวาสรับกับดินแดงและแสงเย็นอย่างพอดี นี่คือช่วงที่ทุกคนหยิบกล้องขึ้นมา — และเป็นเหตุผลว่าทำไมเต้นท์สีเอิร์ธโทนถึงไม่เคยตกยุค</p>
+        <ul class="senses"><li><b>Sound</b> ฟืนแตกเปรี๊ยะ</li><li><b>Scent</b> หมูย่าง · ควันไม้</li><li><b>Feel</b> แดดอุ่นที่ไหล่</li></ul>
+      </article>
+      <article class="moment" data-time="night">
+        <p class="script">21:15 — fireside</p>
+        <h3>บ้านหลังเล็กที่มีเตาผิง</h3>
+        <p>พรมผืนโปรด เก้าอี้ไม้ เทียน และเตาฟืนต่อปล่องผ่านหลังคา ภายในสูงพอให้ยืนเดินได้ เพดานโปร่ง — นี่ไม่ใช่การนอนเต้นท์ แต่คือการย้ายห้องนั่งเล่นไปไว้กลางธรรมชาติ</p>
+        <ul class="senses"><li><b>Sound</b> เพลงแผ่นเสียง · จิ้งหรีด</li><li><b>Scent</b> ช็อกโกแลตร้อน</li><li><b>Feel</b> อบอุ่นถึงปลายเท้า</li></ul>
+        <a href="#build" class="btn btn--cream btn--sm">สร้างคืนแบบนี้ของคุณ →</a>
+      </article>
+    </div>
+  </div>
+
+  <!-- field journal strip -->
+  <div class="journal" aria-label="Field journal">
+    <div class="journal__track">
+      <figure class="polaroid" style="--r:-3deg"><img src="assets/img/canyon.jpg" alt="" loading="lazy"/><figcaption>Canyon rim, sunrise</figcaption></figure>
+      <figure class="polaroid" style="--r:2deg"><img src="assets/img/workshop.jpg" alt="" loading="lazy"/><figcaption>Where it's sewn</figcaption></figure>
+      <figure class="polaroid" style="--r:-1.5deg"><img src="assets/img/interior.jpg" alt="" loading="lazy"/><figcaption>Stove on, socks off</figcaption></figure>
+      <figure class="polaroid" style="--r:3deg"><img src="assets/img/campground.jpg" alt="" loading="lazy"/><figcaption>The neighbourhood</figcaption></figure>
+      <figure class="polaroid" style="--r:-2.5deg"><img src="assets/img/forest.jpg" alt="" loading="lazy"/><figcaption>Pines &amp; canvas</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 360 STUDIO ============ -->
+<section class="studio" id="studio">
+  <header class="section-head">
+    <p class="eyebrow">Chapter Three</p>
+    <h2 class="display split">The 360° Tent Studio</h2>
+    <p class="section-head__lead reveal">ลากเพื่อหมุนรอบเต้นท์ · ซูมเข้าไปดูรายละเอียด · เปลี่ยนรุ่นและสีได้ทันที</p>
+  </header>
+
+  <div class="studio__grid">
+    <div class="studio__viewer" id="viewer">
+      <canvas id="tentCanvas" aria-label="โมเดลเต้นท์ 3 มิติ หมุนได้ 360 องศา"></canvas>
+      <div class="studio__hotspots" id="hotspots"></div>
+      <div class="studio__hint" id="dragHint"><svg viewBox="0 0 48 24"><path d="M4 12h40M10 6l-6 6 6 6M38 6l6 6-6 6"/></svg>ลากเพื่อหมุน 360°</div>
+      <div class="studio__fallback" id="viewerFallback" hidden>ไม่สามารถแสดงโมเดล 3D บนอุปกรณ์นี้ได้</div>
+      <div class="studio__dial">
+        <label for="angle" class="sr-only">มุมมอง</label>
+        <input type="range" id="angle" min="0" max="359" value="35" />
+        <output id="angleOut">035°</output>
+        <button class="chip chip--sm" id="autoRotate" aria-pressed="true">⟳ Auto</button>
+      </div>
+    </div>
+
+    <aside class="studio__panel">
+      <div class="studio__model">
+        <p class="eyebrow">Model</p>
+        <div class="chips" id="modelChips"></div>
+        <h3 class="studio__name" id="modelName">Highline</h3>
+        <p class="studio__desc" id="modelDesc"></p>
+        <dl class="specs" id="modelSpecs"></dl>
+      </div>
+      <div>
+        <p class="eyebrow">Canvas Colour</p>
+        <div class="swatches" id="colorSwatches"></div>
+        <p class="swatch-name" id="colorName"></p>
+      </div>
+      <div>
+        <p class="eyebrow">Details</p>
+        <div class="toggles">
+          <label class="toggle"><input type="checkbox" id="tAwning" checked/><span></span>Awning</label>
+          <label class="toggle"><input type="checkbox" id="tDoor" checked/><span></span>Door open</label>
+          <label class="toggle"><input type="checkbox" id="tLabels" checked/><span></span>Hotspots</label>
+        </div>
+      </div>
+      <a href="#build" class="btn btn--ink btn--block" id="studioToBuild">ใช้เต้นท์นี้ในแคมป์ของฉัน →</a>
+      <p class="fineprint">*ขนาดและสเปกเป็นค่าประมาณเพื่อการแสดงผล กรุณายืนยันกับทีม US Camp ก่อนสั่งซื้อ</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ BUILD YOUR CAMP ============ -->
+<section class="build" id="build">
+  <header class="section-head section-head--light">
+    <p class="eyebrow">Chapter Four</p>
+    <h2 class="display split">Build Your Camp</h2>
+    <p class="section-head__lead reveal">เลือกที่กาง เลือกเต้นท์ แต่งแคมป์ แล้วดูภาพแคมป์ของคุณเกิดขึ้นทีละชิ้น — ทีมของเราจะช่วยจัดชุดที่ใช่ให้</p>
+  </header>
+
+  <div class="presets" id="presets">
+    <span class="eyebrow">Quick start:</span>
+    <button class="chip" data-preset="weekend">Weekend Classic</button>
+    <button class="chip" data-preset="nomad">Desert Nomad</button>
+    <button class="chip" data-preset="cabin">Cabin Cozy</button>
+    <button class="chip" data-preset="family">Family Basecamp</button>
+  </div>
+
+  <div class="build__grid">
+    <div class="build__scene">
+      <div class="scene-frame">
+        <svg id="campScene" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" role="img" aria-label="ภาพตัวอย่างแคมป์ของคุณ"></svg>
+        <div class="scene-title">
+          <p class="script" id="campTagline">Your camp, your story</p>
+          <h3 id="campName">The Golden Mesa Camp</h3>
+        </div>
+      </div>
+      <div class="vibes" id="vibes"></div>
+    </div>
+
+    <div class="build__panel">
+      <ol class="steps" id="steps" role="tablist">
+        <li><button role="tab" class="is-active" data-step="0">1<span>ที่กาง</span></button></li>
+        <li><button role="tab" data-step="1">2<span>เต้นท์</span></button></li>
+        <li><button role="tab" data-step="2">3<span>Shelter</span></button></li>
+        <li><button role="tab" data-step="3">4<span>Living</span></button></li>
+        <li><button role="tab" data-step="4">5<span>Mood</span></button></li>
+      </ol>
+
+      <div class="step is-active" data-step="0">
+        <h4>คุณจะไปกางที่ไหน?</h4>
+        <div class="cards" data-group="terrain"></div>
+      </div>
+      <div class="step" data-step="1">
+        <h4>เลือกบ้านหลังที่สองของคุณ</h4>
+        <div class="cards cards--model" data-group="model"></div>
+        <h5>สีผ้าแคนวาส</h5>
+        <div class="swatches" data-group="color"></div>
+      </div>
+      <div class="step" data-step="2">
+        <h4>เพิ่มความสบายให้ตัวเต้นท์</h4>
+        <div class="items" data-group="shelter"></div>
+      </div>
+      <div class="step" data-step="3">
+        <h4>แต่งลานหน้าบ้าน</h4>
+        <div class="items" data-group="living"></div>
+      </div>
+      <div class="step" data-step="4">
+        <h4>ช่วงเวลาที่คุณรักที่สุด</h4>
+        <div class="cards cards--mood" data-group="mood"></div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn--line btn--sm" id="prevStep">← ย้อนกลับ</button>
+        <button class="btn btn--cream btn--sm" id="nextStep">ถัดไป →</button>
+      </div>
+
+      <div class="camp-card" id="campCard">
+        <div class="camp-card__head">
+          <p class="eyebrow">Your Camp Card</p>
+          <span class="camp-card__count" id="itemCount">0 items</span>
+        </div>
+        <ul class="camp-card__list" id="gearList"></ul>
+        <div class="camp-card__actions">
+          <button class="btn btn--cream btn--block" id="sendAdvisor">ส่งแคมป์นี้ให้ Camp Advisor ช่วยจัด →</button>
+          <div class="camp-card__row">
+            <button class="btn btn--line btn--sm" id="shareCamp">คัดลอกลิงก์แคมป์</button>
+            <button class="btn btn--line btn--sm" id="resetCamp">เริ่มใหม่</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAMPER'S CODE ============ -->
+<section class="code">
+  <div class="code__grid">
+    <div class="code__item reveal"><span class="code__num">I.</span><h3>Pitch it once,<br/>keep it forever.</h3><p>เราเลือกเฉพาะอุปกรณ์ที่อยู่กับคุณได้นาน และพร้อมดูแลหลังการขายตลอดอายุการใช้งาน</p></div>
+    <div class="code__item reveal" data-delay="1"><span class="code__num">II.</span><h3>Leave it better<br/>than you found it.</h3><p>Leave No Trace คือมารยาทพื้นฐานของแคมเปอร์ — ทุกทริปที่ออกจากร้านเราได้รับคู่มือเล็กๆ ติดไปด้วย</p></div>
+    <div class="code__item reveal" data-delay="2"><span class="code__num">III.</span><h3>Style is how<br/>you live outside.</h3><p>แคมป์ที่ดีไม่ต้องหรูหรา แต่ต้องเป็นตัวคุณ — ให้เราช่วยจัดวางให้ได้ทั้งความสวยและการใช้งานจริง</p></div>
+  </div>
+</section>
+
+<!-- ============ VISIT / PITCH DAY ============ -->
+<section class="visit" id="visit">
+  <div class="visit__grid">
+    <div class="visit__copy">
+      <p class="eyebrow">Chapter Five</p>
+      <h2 class="display split">Come Feel<br/>the Canvas.</h2>
+      <p>ภาพสวยแค่ไหนก็ไม่เท่ากับการได้ก้าวเข้าไปยืนในเต้นท์จริง จอง <strong>Pitch Day</strong> กับเรา — ทีม US Camp จะกางเต้นท์ตามแคมป์ที่คุณออกแบบไว้ สอนกางด้วยตัวเอง และช่วยเลือกชุดที่เหมาะกับสไตล์การเที่ยวของคุณ</p>
+      <ul class="ticks">
+        <li>ลองกาง–เก็บเต้นท์จริงกับผู้เชี่ยวชาญ 1:1</li>
+        <li>จัดชุดอุปกรณ์ตาม Camp Card ของคุณ</li>
+        <li>คำแนะนำการดูแลผ้าแคนวาสในอากาศร้อนชื้น</li>
+      </ul>
+    </div>
+    <form class="visit__form" id="visitForm" novalidate>
+      <h3>Book a Pitch Day</h3>
+      <label>ชื่อของคุณ<input name="name" required autocomplete="name" /></label>
+      <label>เบอร์โทร หรือ LINE ID<input name="contact" required /></label>
+      <div class="form-row">
+        <label>วันที่สะดวก<input type="date" name="date" /></label>
+        <label>จำนวนคน<select name="people"><option>1–2</option><option>3–4</option><option>5+</option></select></label>
+      </div>
+      <label>แคมป์ที่คุณออกแบบไว้<textarea name="camp" id="campField" rows="4" placeholder="กด “ส่งแคมป์นี้ให้ Camp Advisor” ในส่วน Build Your Camp เพื่อเติมอัตโนมัติ"></textarea></label>
+      <button class="btn btn--ink btn--block" type="submit">จอง Pitch Day</button>
+      <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="footer__top">
+    <svg class="footer__logo"><use href="#logo"/></svg>
+    <p class="script">Classic Canvas. Modern Wild.</p>
+  </div>
+  <div class="footer__cols">
+    <div><h4>Explore</h4><a href="#story">Our Story</a><a href="#day">A Day at Camp</a><a href="#studio">360° Studio</a><a href="#build">Build Your Camp</a></div>
+    <div><h4>Visit</h4><p>US Camp Showroom<br/>Bangkok, Thailand<br/>Sat–Sun · 10:00–18:00</p></div>
+    <div><h4>Talk to us</h4><a href="#visit">Book a Pitch Day</a><a href="#visit">LINE: @uscamp</a><a href="#visit">hello@uscamp.co</a></div>
+  </div>
+  <p class="footer__legal">© <span id="year"></span> US Camp. Springbar® is a registered trademark of its respective owner. Product names, specifications and imagery are shown for illustration.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="js/data.js"></script>
+<script src="js/tent-svg.js"></script>
+<script src="js/main.js"></script>
+<script src="js/tent360.js"></script>
+<script src="js/build.js"></script>
+</body>
+</html>
