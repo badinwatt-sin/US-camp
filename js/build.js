@@ -54,6 +54,7 @@
     if (state.items.includes(id)) {
       state.items = state.items.filter((x) => x !== id);
     } else {
+      if (id === 'awning' && state.model !== 'traveler') { toast('Awning มีเฉพาะรุ่น Traveler · เลือก Traveler ในขั้นตอน “เต้นท์” ก่อน'); return; }
       state.items.push(id);
       if (id === 'stove' && state.mood !== 'night') toast('เตาฟืนจะได้ใช้เต็มที่ตอนกลางคืน ลองเลือกเวลา Lantern Light ดู');
       if (id === 'fly') toast('Stormfly® ช่วยได้มากช่วงหน้ามรสุมของไทย');
@@ -70,6 +71,11 @@
   };
 
   function apply(opts = {}) {
+    // the awning only exists on the Traveler
+    if (state.model !== 'traveler' && state.items.includes('awning')) {
+      state.items = state.items.filter((x) => x !== 'awning');
+      if (!opts.silent) toast('นำ Awning ออกแล้ว · กันสาดมีเฉพาะรุ่น Traveler');
+    }
     const m = find(D.models, state.model), c = find(D.colors, state.color);
     const t = find(D.terrains, state.terrain), mo = find(D.moods, state.mood);
     const photo = D.scenes[state.terrain][state.mood];
@@ -139,6 +145,8 @@
     $$('.build .item').forEach((b) => {
       const on = state.items.includes(b.dataset.id);
       b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on);
+      const off = b.dataset.id === 'awning' && state.model !== 'traveler';
+      b.classList.toggle('is-unavailable', off); b.setAttribute('aria-disabled', off);
     });
     // model thumbnails follow the chosen colour
     $$('.card--product img', groups.model).forEach((im) => {

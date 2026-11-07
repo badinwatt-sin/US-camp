@@ -22,6 +22,25 @@ python3 -m http.server 8000
 | 4 | **Build Your Camp** | Five-step configurator (setting → tent → shelter → living → time of day). The preview is a photo lookbook: a real campsite photo for the setting and time, the chosen tent's real product photo, and the selected gear. Generates a camp name, style tags, a Camp Card and a share link, and can send the camp to an advisor |
 | 5 | **นัดลองกางเต้นท์ (try-out booking)** | Booking form for a showroom visit, filled in from the Camp Card |
 
+## 360° studio: real photography
+
+The studio is a photo spin (drag, swipe, arrow keys, slider, auto-rotate). There is no 3D model.
+Springbar publishes **two real angles per model**: front-left 3/4 for each colourway, and back-right 3/4 in Pearl Gray only.
+The viewer places them at 325° and 135°. For the symmetric models (Compact, Outfitter, Vagabond) it mirrors both photos to fill 35° and 225°.
+The **Traveler front is never mirrored** because its door and window are asymmetric.
+Back views show a note when the selected colour is not Pearl Gray.
+
+**For a true 360° spin, shoot a turntable set** and the viewer picks it up with no code change:
+
+1. Shoot 36 frames (every 10°) per model, ideally per colourway. 24 frames (every 15°) also works.
+2. Use a fixed camera on a tripod at about 1.2 m height, the same distance and focal length for every frame (35–50 mm equivalent), on a seamless white or neutral background with even light.
+3. Keep the tent centred. Rotate the tent on a turntable, or walk the camera around a marked circle.
+4. Export at 1600 × 907 JPG (the same 16:9-ish frame as the product photos), with the same crop on every frame.
+5. Save the files as `assets/img/spin/{model}/{color}/01.jpg … 36.jpg` (frame 01 = straight front).
+6. In `js/data.js`, add `spin: { traveler: { count: 36, path: 'assets/img/spin/{model}/{color}/{i}.jpg' } }`.
+
+The awning exists only on the **Traveler**: Build Your Camp disables it for other models, and the shop sells Portico panels for the Traveler only.
+
 ## Shop · checkout · tracking · admin (demo)
 
 > **Demo only.** Prices are simulated (THB, roughly from springbar.com USD list prices) and must be confirmed.
@@ -50,7 +69,7 @@ index.html
 css/style.css      design tokens (tent-derived palette), layout, motion
 js/data.js         models, colours, terrains, gear, presets  ← edit catalogue here
 js/main.js         intro, nav, reveals, parallax, story, day-at-camp, form
-js/tent360.js      Three.js 360° studio
+js/studio.js       360° photo-spin studio (real photography)
 js/build.js        Build Your Camp configurator
 assets/img/real/        lifestyle and craft photography (Springbar® and credited community photos)
 assets/img/products/    official Springbar® product photos, per model × colour + rear view

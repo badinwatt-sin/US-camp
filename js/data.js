@@ -58,7 +58,7 @@ window.USCampData = {
   },
   items: {
     shelter: [
-      { id: 'awning', name: 'Front Awning', th: 'กันสาดหน้าเต้นท์ ห้องนั่งเล่นกลางแจ้งอีกหนึ่งห้อง', icon: 'M4 18 L20 8 L36 18 M8 18 V34 M32 18 V34' },
+      { id: 'awning', name: 'Front Awning · Traveler', th: 'กันสาดหน้าเต้นท์ มีเฉพาะรุ่น Traveler', icon: 'M4 18 L20 8 L36 18 M8 18 V34 M32 18 V34' },
       { id: 'fly', name: 'Stormfly® Rain Fly', th: 'ฟลายชีทกันฝนหนัก สำหรับหน้ามรสุม', icon: 'M2 20 L20 6 L38 20 M8 16 L8 32 M32 16 L32 32' },
       { id: 'tarp', name: 'Ground Tarp', th: 'ผ้าปูรองพื้นตามขนาดเต้นท์ ปกป้องพื้นไวนิล', icon: 'M4 28 L14 20 H36 L26 28 Z' },
       { id: 'stove', name: 'Stove Jack + Wood Stove', th: 'ช่องปล่องควันซิปได้ + เตาฟืน อุ่นทั้งคืน', icon: 'M10 34 V20 H28 V34 M24 20 V4 H28 V20 M14 26 H24' },

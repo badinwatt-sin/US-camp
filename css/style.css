@@ -378,8 +378,6 @@ section { position: relative; }
 .studio__photo img { width: 100%; max-height: 100%; object-fit: contain; transition: opacity .35s; }
 .studio__photo img.is-swapping { opacity: .3; }
 .studio__photo figcaption { position: absolute; left: 20px; right: 20px; bottom: 16px; text-align: center; font-size: 13px; color: var(--saddle); }
-.studio__viewer:not([data-view="3d"]) .studio__photo { opacity: 1; pointer-events: auto; }
-.studio__viewer:not([data-view="3d"]) .studio__dial, .studio__viewer:not([data-view="3d"]) .studio__hotspots, .studio__viewer:not([data-view="3d"]) .studio__hint { visibility: hidden; }
 .specs { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .specs div { padding: 12px 0; }
 .specs div + div { border-left: 1px solid var(--line); padding-left: 14px; }
@@ -944,3 +942,37 @@ p, li, figcaption, small, .studio__desc, .hero__sub, .section-head__lead, blockq
 .studio__price b { font-size: 22px; font-variant-numeric: tabular-nums; }
 .studio__price small { font-size: 11px; color: var(--warn); }
 .camp-card__actions #orderCamp { --bg: var(--rust); border-color: var(--rust); color: var(--paper); }
+
+/* ---- v5: 360° studio with real photography (photo spin) ---- */
+.studio__viewer { background: #fff; min-height: 0; display: flex; flex-direction: column; justify-content: center; padding: 28px 20px 84px; touch-action: pan-y; }
+.studio__viewer::before { content: "360°"; color: rgba(31, 26, 20, .05); top: 10px; }
+.spin { position: relative; outline: none; cursor: grab; user-select: none; -webkit-user-select: none; touch-action: pan-y; }
+.spin.is-dragging { cursor: grabbing; }
+.spin:focus-visible { box-shadow: 0 0 0 2px var(--rust); border-radius: 8px; }
+.spin__box { position: relative; width: 100%; aspect-ratio: 1000 / 567; }
+.spin__stage { position: absolute; inset: 0; overflow: hidden; }
+.spin__frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; will-change: opacity, transform; pointer-events: none; -webkit-user-drag: none; }
+.spin__note { position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); margin: 0; font-size: 12px; color: var(--saddle); background: var(--canvas); padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+.studio__hotspots { position: absolute; inset: 0; pointer-events: none; transition: opacity .3s; }
+.studio__hotspots.is-off { opacity: 0; }
+.studio__hotspots.is-off .hotspot { pointer-events: none; }
+.studio__hotspots .hotspot { left: var(--x); top: var(--y); transform: none; }
+.studio__hotspots[data-mirror="1"] .hotspot { left: calc(100% - var(--x)); }
+.studio__hint { bottom: auto; top: 6px; }
+.studio__dial { left: 16px; right: 16px; bottom: 16px; gap: 8px; }
+.spin-btn { width: 34px; height: 34px; flex: none; border-radius: 50%; border: 1px solid rgba(31, 26, 20, .25); background: #fff; font-size: 22px; line-height: 1; display: grid; place-items: center; padding: 0 0 3px; }
+.spin-btn:hover { background: var(--ink); color: var(--paper); }
+.studio__awning { margin: 6px 0 0; font-size: 14px; }
+.studio__awning b { font-weight: 600; }
+@media (max-width: 480px) {
+  .studio__viewer { padding: 22px 8px 70px; min-height: 0 !important; }
+  .studio__dial { left: 8px; right: 8px; bottom: 10px; padding: 6px 8px; gap: 6px; }
+  .studio__dial output { min-width: 42px; font-size: 15px; }
+  .spin-btn { width: 30px; height: 30px; }
+}
+.item.is-unavailable { opacity: .45; }
+.item.is-unavailable i::before { content: "–"; }
+.studio__viewer { align-self: start; position: sticky; top: calc(var(--nav-h, 108px) + 12px); }
+@media (max-width: 1080px) { .studio__viewer { position: relative; top: 0; } }
+#autoRotate { white-space: nowrap; flex: none; }
+@media (max-width: 480px) { #autoRotate { padding: 4px 9px; font-size: 12px; } }

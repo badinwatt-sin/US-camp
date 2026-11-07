@@ -4,8 +4,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Ultra&family=Jost:wght@300;400;500;600&family=Yellowtail&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=20261108d" />
-  <link rel="stylesheet" href="css/shop.css?v=20261108d" />
+  <link rel="stylesheet" href="css/style.css?v=20261108e" />
+  <link rel="stylesheet" href="css/shop.css?v=20261108e" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231F1A14'/%3E%3Cpath d='M12 50 L20 18 H44 L52 50 Z' fill='%23B98D57'/%3E%3Cpath d='M18 18 H46' stroke='%23E6E1D6' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M28 50 L32 28 L36 50Z' fill='%231F1A14'/%3E%3C/svg%3E" />
 
 <!-- ============ INTRO ============ -->
@@ -244,25 +244,25 @@
   <header class="section-head">
     <p class="eyebrow">Chapter Three · The Tents</p>
     <h2 class="display split">Four Tents. One Frame.</h2>
-    <p class="section-head__lead reveal">ทุกรุ่นใช้โครงสปริงบาร์แบบเดียวกับปี 1961 ต่างกันแค่ขนาดกับวิธีเที่ยวของคุณ ลากเพื่อหมุนดูรอบตัว หรือสลับไปดูภาพสินค้าจริง</p>
+    <p class="section-head__lead reveal">ทุกรุ่นใช้โครงสปริงบาร์แบบเดียวกับปี 1961 ต่างกันแค่ขนาดกับวิธีเที่ยวของคุณ ลากหรือปัดภาพจริงเพื่อหมุนดูรอบตัวเต้นท์</p>
   </header>
 
   <div class="studio__grid">
-    <div class="studio__viewer" id="viewer" data-view="3d">
-      <div class="view-tabs" role="tablist" aria-label="มุมมอง">
-        <button class="view-tab" role="tab" data-view="3d" aria-selected="true">360° Model</button>
-        <button class="view-tab" role="tab" data-view="front" aria-selected="false">Photo · Front</button>
-        <button class="view-tab" role="tab" data-view="back" aria-selected="false">Photo · Back</button>
+    <div class="studio__viewer" id="viewer">
+      <div class="spin" id="spin" tabindex="0" aria-roledescription="ภาพหมุน 360 องศา" aria-label="หมุนดูเต้นท์ด้วยการลาก ปัด หรือปุ่มลูกศรซ้าย–ขวา">
+        <div class="spin__box">
+          <div class="spin__stage" id="spinStage" role="img"></div>
+          <div class="studio__hotspots" id="hotspots"></div>
+        </div>
+        <p class="spin__note" id="spinNote" hidden></p>
+        <div class="studio__hint" id="dragHint"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M4 12h40M10 6l-6 6 6 6M38 6l6 6-6 6"/></svg>ลากหรือปัดเพื่อหมุนรอบเต้นท์</div>
       </div>
-      <canvas id="tentCanvas" aria-label="โมเดลเต้นท์ 3 มิติ หมุนได้ 360 องศา"></canvas>
-      <div class="studio__hotspots" id="hotspots"></div>
-      <div class="studio__hint" id="dragHint"><svg viewBox="0 0 48 24"><path d="M4 12h40M10 6l-6 6 6 6M38 6l6 6-6 6"/></svg>ลากเพื่อหมุน 360°</div>
-      <div class="studio__fallback" id="viewerFallback" hidden>อุปกรณ์นี้แสดงโมเดล 3D ไม่ได้ ลองกด “Photo · Front” เพื่อดูภาพสินค้าจริง</div>
-      <figure class="studio__photo" id="studioPhoto"><img src="assets/img/products/traveler-suntan.jpg" alt="Springbar Traveler" /><figcaption id="studioPhotoNote"></figcaption></figure>
       <div class="studio__dial">
-        <label for="angle" class="sr-only">มุมมอง</label>
-        <input type="range" id="angle" min="0" max="359" value="35" />
-        <output id="angleOut">035°</output>
+        <button class="spin-btn" id="spinPrev" type="button" aria-label="หมุนไปมุมก่อนหน้า">‹</button>
+        <label for="angle" class="sr-only">มุมมอง (องศา)</label>
+        <input type="range" id="angle" min="0" max="359" value="325" />
+        <output id="angleOut">325°</output>
+        <button class="spin-btn" id="spinNext" type="button" aria-label="หมุนไปมุมถัดไป">›</button>
         <button class="chip chip--sm" id="autoRotate" aria-pressed="true">⟳ Auto</button>
       </div>
     </div>
@@ -276,23 +276,16 @@
         <p class="studio__desc" id="modelDesc"></p>
         <dl class="specs" id="modelSpecs"></dl>
         <p class="studio__openings" id="modelOpenings"></p>
+        <p class="studio__awning" id="modelAwning"></p>
       </div>
       <div>
         <p class="eyebrow">Canvas Colour</p>
         <div class="swatches" id="colorSwatches"></div>
         <p class="swatch-name" id="colorName"></p>
       </div>
-      <div>
-        <p class="eyebrow">Details</p>
-        <div class="toggles">
-          <label class="toggle"><input type="checkbox" id="tAwning" checked/><span></span>Awning</label>
-          <label class="toggle"><input type="checkbox" id="tDoor" checked/><span></span>Door open</label>
-          <label class="toggle"><input type="checkbox" id="tLabels" checked/><span></span>Hotspots</label>
-        </div>
-      </div>
       <div class="studio__buy"><p class="studio__price"><b id="studioPrice"></b><small>ราคาจำลอง</small></p><button class="btn btn--ink" id="studioAdd" type="button">เพิ่มลงตะกร้า</button></div>
       <a href="#build" class="btn btn--line btn--block" id="studioToBuild">ใช้เต้นท์หลังนี้ในแคมป์ของฉัน →</a>
-      <p class="fineprint">สเปกจาก springbar.com · โมเดล 3D จำลองจากภาพสินค้าและคู่มือ Field Guide เพื่อการแสดงผล ไม่ใช่แบบผลิตจริง</p>
+      <p class="fineprint">ภาพจริงจาก Springbar® · สเปกจาก springbar.com · ภาพมุมฝั่งตรงข้ามของรุ่นทรงสมมาตรเป็นภาพกลับด้าน</p>
     </aside>
   </div>
 </section>
@@ -467,14 +460,12 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="grain" aria-hidden="true"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-<script src="js/data.js?v=20261108d"></script>
-<script src="js/main.js?v=20261108d"></script>
-<script src="js/tent360.js?v=20261108d"></script>
-<script src="js/build.js?v=20261108d"></script>
-<script src="js/shop/catalog.js?v=20261108d"></script>
-<script src="js/shop/store.js?v=20261108d"></script>
-<script src="js/shop/ui.js?v=20261108d"></script>
-<script src="js/shop/home.js?v=20261108d"></script>
-<script src="js/thai-wrap.js?v=20261108d"></script>
+<script src="js/data.js?v=20261108e"></script>
+<script src="js/main.js?v=20261108e"></script>
+<script src="js/studio.js?v=20261108e"></script>
+<script src="js/build.js?v=20261108e"></script>
+<script src="js/shop/catalog.js?v=20261108e"></script>
+<script src="js/shop/store.js?v=20261108e"></script>
+<script src="js/shop/ui.js?v=20261108e"></script>
+<script src="js/shop/home.js?v=20261108e"></script>
+<script src="js/thai-wrap.js?v=20261108e"></script>
