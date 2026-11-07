@@ -15,23 +15,38 @@
     toastTimer = setTimeout(() => t.classList.remove('is-on'), 2800);
   };
 
-  /* ---------- hero tent ---------- */
-  const heroTent = $('#heroTent');
-  if (heroTent && window.USCampTent) {
-    heroTent.innerHTML = USCampTent.tentSVG({ id: 'hero', awning: true, door: 'open' });
+  /* ---------- hero photo slideshow (slow Ken Burns crossfade) ---------- */
+  const slides = $$('#heroSlides .hero__slide');
+  const dots = $('#heroDots'), cap = $('#heroCaption');
+  let slideIdx = 0, slideTimer = null;
+  slides.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.setAttribute('aria-label', 'ภาพที่ ' + (i + 1));
+    b.addEventListener('click', () => { if (i !== slideIdx) showSlide(i); restartSlides(); });
+    dots.appendChild(b);
+  });
+  function showSlide(i) {
+    const prev = slides[slideIdx];
+    prev.classList.remove('is-active');
+    prev.classList.add('was-active');
+    setTimeout(() => prev.classList.remove('was-active'), 1800);
+    slideIdx = i;
+    const s = slides[i];
+    const img = s.querySelector('img');
+    if (img.loading === 'lazy') img.loading = 'eager';
+    s.classList.add('is-active');
+    cap.classList.remove('is-in'); void cap.offsetWidth;
+    cap.textContent = s.dataset.caption; cap.classList.add('is-in');
+    Array.from(dots.children).forEach((d, k) => d.classList.toggle('is-active', k === i));
   }
-
-  /* hero composition: re-frame the scene on narrow screens */
-  const heroLayout = () => {
-    const narrow = window.innerWidth < 700;
-    const set = (id, t) => { const el = document.getElementById(id); if (el) el.setAttribute('transform', t); };
-    set('heroTent', narrow ? 'translate(730 830) scale(.82)' : 'translate(1000 800) scale(1.42)');
-    set('heroFire', narrow ? 'translate(940 850) scale(.8)' : 'translate(800 812)');
-    const hide = (id, h) => { const el = document.getElementById(id); if (el) el.style.display = h ? 'none' : ''; };
-    hide('heroChair', narrow); hide('heroCooler', narrow); hide('heroTree', narrow);
-  };
-  heroLayout();
-  window.addEventListener('resize', heroLayout);
+  function restartSlides() {
+    clearInterval(slideTimer);
+    if (!reduced) slideTimer = setInterval(() => showSlide((slideIdx + 1) % slides.length), 6500);
+  }
+  dots.children[0].classList.add('is-active');
+  // warm the next slides after first paint
+  window.addEventListener('load', () => slides.forEach((s) => { const im = s.querySelector('img'); im.loading = 'eager'; }));
+  restartSlides();
 
   /* ---------- intro ---------- */
   const intro = $('#intro');
@@ -121,26 +136,18 @@
   ['story', 'day', 'studio', 'build', 'visit'].forEach((id) => { const s = document.getElementById(id); if (s) sectionIO.observe(s); });
 
   /* ---------- hero parallax ---------- */
-  const layers = $$('#heroScene [data-depth]');
-  const hero = $('#hero');
-  let mx = 0, my = 0, sy = 0, ticking = false;
-  const applyParallax = () => {
-    ticking = false;
-    layers.forEach((l) => {
-      const d = parseFloat(l.dataset.depth);
-      l.style.transform = `translate(${(mx * d * 60).toFixed(1)}px, ${(my * d * 30 - sy * d * 0.5).toFixed(1)}px)`;
-    });
-  };
-  const queue = () => { if (!ticking) { ticking = true; requestAnimationFrame(applyParallax); } };
+  const heroSlides = $('#heroSlides');
   if (!reduced) {
-    hero.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse') return;
-      const r = hero.getBoundingClientRect();
-      mx = (e.clientX - r.left) / r.width - 0.5;
-      my = (e.clientY - r.top) / r.height - 0.5;
-      queue();
-    });
-    window.addEventListener('scroll', () => { sy = Math.min(window.scrollY, window.innerHeight); queue(); }, { passive: true });
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const y = Math.min(window.scrollY, window.innerHeight);
+        heroSlides.style.transform = `translateY(${(y * 0.3).toFixed(1)}px)`;
+      });
+    }, { passive: true });
   }
 
   /* ---------- story chapters ---------- */

@@ -1,4 +1,8 @@
-/* US Camp — 360° Tent Studio (Three.js r128, procedural Springbar-style tent) */
+/* US Camp — 360° Tent Studio
+   Procedural Springbar® tents (Three.js r128) modelled from the official
+   front/rear product photos and field-guide outlines:
+   flat tensioned roof between two spring bars, curled roof ends,
+   near-upright end walls and strongly flared side walls. */
 (function () {
   'use strict';
   const D = window.USCampData;
@@ -7,15 +11,15 @@
   const viewer = $('#viewer');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const state = { model: 'highline', color: 'tan', awning: true, door: true, labels: true, auto: !reduced };
-  window.USCampStudio = { state }; // read by the configurator
+  const state = { model: 'traveler', color: 'suntan', awning: true, door: true, labels: true, auto: !reduced, view: '3d' };
+  window.USCampStudio = { state };
 
-  /* ---------- UI (built even if WebGL fails) ---------- */
+  /* ---------- panel UI ---------- */
   const chips = $('#modelChips');
   D.models.forEach((m) => {
     const b = document.createElement('button');
     b.className = 'chip'; b.textContent = m.name; b.dataset.id = m.id;
-    b.addEventListener('click', () => { state.model = m.id; updateUI(); rebuild(); });
+    b.addEventListener('click', () => { setModel(m.id); });
     chips.appendChild(b);
   });
   const sw = $('#colorSwatches');
@@ -26,273 +30,358 @@
     b.addEventListener('click', () => { state.color = c.id; updateUI(); recolor(); });
     sw.appendChild(b);
   });
+
+  function setModel(id) {
+    const m = D.models.find((x) => x.id === id);
+    state.model = id;
+    state.awning = m.awning;
+    $('#tAwning').checked = state.awning;
+    updateUI(); rebuild(true);
+  }
+
   function updateUI() {
     const m = D.models.find((x) => x.id === state.model);
     const c = D.colors.find((x) => x.id === state.color);
     chips.querySelectorAll('.chip').forEach((b) => b.classList.toggle('is-active', b.dataset.id === m.id));
     sw.querySelectorAll('.swatch').forEach((b) => b.classList.toggle('is-active', b.dataset.id === c.id));
     $('#modelName').textContent = m.name;
+    $('#modelTag').textContent = m.tag;
     $('#modelDesc').textContent = m.desc;
     $('#modelSpecs').innerHTML =
+      `<div><dt>Footprint</dt><dd>${m.ft}</dd></div>` +
+      `<div><dt>Height</dt><dd>${m.ftH}</dd></div>` +
       `<div><dt>Sleeps</dt><dd>${m.sleeps}</dd></div>` +
-      `<div><dt>Floor*</dt><dd>${m.w}×${m.d} m</dd></div>` +
-      `<div><dt>Peak*</dt><dd>${m.h} m</dd></div>`;
+      `<div><dt>Weight</dt><dd>${m.weight}</dd></div>`;
+    $('#modelOpenings').textContent = m.openings;
     $('#colorName').innerHTML = `<b>${c.name}</b> · ${c.th}`;
+    const front = `assets/img/products/${m.id}-${c.id}.jpg`;
+    const back = `assets/img/products/${m.id}-back.jpg`;
+    const img = $('#studioPhoto img');
+    const src = state.view === 'back' ? back : front;
+    if (img.getAttribute('src') !== src) {
+      img.classList.add('is-swapping');
+      const pre = new Image();
+      pre.onload = () => { img.src = src; img.alt = `Springbar ${m.name} ${state.view === 'back' ? '(ด้านหลัง)' : c.name}`; img.classList.remove('is-swapping'); };
+      pre.src = src;
+    }
+    $('#studioPhotoNote').textContent = state.view === 'back'
+      ? `ด้านหลัง ${m.name} · ภาพสินค้าจริงจาก Springbar® (สีในภาพอาจต่างจากที่เลือก)`
+      : `${m.name} · ${c.name} · ภาพสินค้าจริงจาก Springbar®`;
   }
-  updateUI();
+
+  /* view tabs: 3D / front photo / back photo */
+  document.querySelectorAll('.view-tab').forEach((b) => b.addEventListener('click', () => {
+    state.view = b.dataset.view;
+    document.querySelectorAll('.view-tab').forEach((x) => x.setAttribute('aria-selected', x === b));
+    viewer.dataset.view = state.view;
+    updateUI();
+  }));
 
   $('#studioToBuild').addEventListener('click', () => {
     document.dispatchEvent(new CustomEvent('uscamp:usetent', { detail: { model: state.model, color: state.color } }));
   });
 
+  updateUI();
+
   /* ---------- WebGL ---------- */
+  function fail() {
+    const fb = $('#viewerFallback'); if (fb) fb.hidden = false;
+    const hint = $('#dragHint'); if (hint) hint.hidden = true;
+    window.USCampStudio.set = function (model, color) { if (model) state.model = model; if (color) state.color = color; updateUI(); };
+  }
   if (!window.THREE || !canvas) return fail();
   let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  } catch (e) { return fail(); }
-
-  function fail() {
-    const fb = $('#viewerFallback');
-    if (fb) fb.hidden = false;
-    const hint = $('#dragHint'); if (hint) hint.style.display = 'none';
-    window.USCampStudio.recolor = function () {};
-  }
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); } catch (e) { return fail(); }
 
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
+  const lin = (hex) => new THREE.Color(hex).convertSRGBToLinear();
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(new THREE.Color(0xE5D6BA).convertSRGBToLinear(), 16, 34);
-  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-  camera.position.set(7.6, 3.6, 9.4);
+  scene.fog = new THREE.Fog(lin(0xE6DDCB), 14, 34);
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+  camera.position.set(-4.8, 3.0, 7.8);
 
   const controls = new THREE.OrbitControls(camera, canvas);
-  controls.target.set(0, 0.8, 0.4);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.08;
+  controls.enableDamping = true; controls.dampingFactor = 0.08;
   controls.enablePan = false;
-  controls.minDistance = 5;
-  controls.maxDistance = 16;
-  controls.minPolarAngle = 0.35;
-  controls.maxPolarAngle = Math.PI / 2 - 0.04;
-  controls.autoRotate = state.auto;
-  controls.autoRotateSpeed = 0.9;
-  controls.enableZoom = true;
+  controls.minPolarAngle = 0.3; controls.maxPolarAngle = Math.PI / 2 - 0.05;
+  controls.autoRotate = state.auto; controls.autoRotateSpeed = 0.8;
 
-  // lights
-  scene.add(new THREE.HemisphereLight(0xFFF4E0, 0x8A6A4A, 0.75));
-  const sun = new THREE.DirectionalLight(0xFFE6C0, 1.05);
-  sun.position.set(6, 10, 4);
+  scene.add(new THREE.HemisphereLight(0xFFF6E6, 0x7A6A55, 0.7));
+  const sun = new THREE.DirectionalLight(0xFFEBD0, 0.95);
+  sun.position.set(5, 9, 6);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
-  Object.assign(sun.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, near: 1, far: 30 });
-  sun.shadow.radius = 4;
+  Object.assign(sun.shadow.camera, { left: -7, right: 7, top: 7, bottom: -7, near: 1, far: 30 });
+  sun.shadow.radius = 5; sun.shadow.bias = -0.0005;
   scene.add(sun);
-  const warm = new THREE.PointLight(0xFFB26B, 0.0, 6);
-  scene.add(warm);
+  const fill = new THREE.DirectionalLight(0xDDE6F0, 0.25); fill.position.set(-6, 4, -5); scene.add(fill);
 
-  // ground
-  const ground = new THREE.Mesh(
-    new THREE.CircleGeometry(14, 64),
-    new THREE.MeshStandardMaterial({ color: new THREE.Color(0xC9AE85).convertSRGBToLinear(), roughness: 1 })
-  );
-  ground.rotation.x = -Math.PI / 2;
-  ground.receiveShadow = true;
-  scene.add(ground);
-  // subtle compass ring
-  const ring = new THREE.Mesh(new THREE.RingGeometry(4.6, 4.63, 128), new THREE.MeshBasicMaterial({ color: 0x8E6142, transparent: true, opacity: 0.35 }));
-  ring.rotation.x = -Math.PI / 2; ring.position.y = 0.005; scene.add(ring);
+  const ground = new THREE.Mesh(new THREE.CircleGeometry(16, 72), new THREE.MeshStandardMaterial({ color: lin(0xD6CCB9), roughness: 1 }));
+  ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
 
-  /* canvas weave texture */
-  function weaveTexture() {
-    const c = document.createElement('canvas'); c.width = c.height = 256;
+  /* canvas weave texture (also used as bump) */
+  function weave() {
+    const c = document.createElement('canvas'); c.width = c.height = 512;
     const g = c.getContext('2d');
-    g.fillStyle = '#ffffff'; g.fillRect(0, 0, 256, 256);
-    for (let i = 0; i < 256; i += 2) {
-      g.fillStyle = `rgba(0,0,0,${0.025 + Math.random() * 0.03})`; g.fillRect(0, i, 256, 1);
-      g.fillStyle = `rgba(0,0,0,${0.02 + Math.random() * 0.025})`; g.fillRect(i, 0, 1, 256);
+    g.fillStyle = '#fff'; g.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 512; i += 2) {
+      g.fillStyle = `rgba(0,0,0,${0.03 + Math.random() * 0.035})`; g.fillRect(0, i, 512, 1);
+      g.fillStyle = `rgba(0,0,0,${0.025 + Math.random() * 0.03})`; g.fillRect(i, 0, 1, 512);
     }
-    for (let k = 0; k < 1400; k++) { g.fillStyle = `rgba(80,60,30,${Math.random() * 0.05})`; g.fillRect(Math.random() * 256, Math.random() * 256, 2, 1); }
+    for (let k = 0; k < 3000; k++) { g.fillStyle = `rgba(70,50,30,${Math.random() * 0.05})`; g.fillRect(Math.random() * 512, Math.random() * 512, 2 + Math.random() * 3, 1); }
     const t = new THREE.CanvasTexture(c);
-    t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 3);
-    t.encoding = THREE.sRGBEncoding;
+    t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2, 2); t.anisotropy = 4;
     return t;
   }
-  const weave = weaveTexture();
-
+  const wtex = weave();
   const mats = {
-    wall: new THREE.MeshStandardMaterial({ map: weave, roughness: 0.95, side: THREE.DoubleSide }),
-    roof: new THREE.MeshStandardMaterial({ map: weave, roughness: 0.9, side: THREE.DoubleSide }),
-    mesh: new THREE.MeshStandardMaterial({ color: 0x2A241D, roughness: 1, side: THREE.DoubleSide }),
-    floor: new THREE.MeshStandardMaterial({ color: 0x3C3A33, roughness: 0.8 }),
-    steel: new THREE.MeshStandardMaterial({ color: 0xC9C5BC, metalness: 0.6, roughness: 0.35 }),
-    rope: new THREE.LineBasicMaterial({ color: 0xF1EBDD, transparent: true, opacity: 0.7 }),
-    glow: new THREE.MeshBasicMaterial({ color: 0xFFB862, side: THREE.DoubleSide, transparent: true, opacity: 0.85 })
+    wall: new THREE.MeshStandardMaterial({ map: wtex, bumpMap: wtex, bumpScale: 0.004, roughness: 0.96, side: THREE.DoubleSide }),
+    roof: new THREE.MeshStandardMaterial({ map: wtex, bumpMap: wtex, bumpScale: 0.003, roughness: 0.9, side: THREE.DoubleSide }),
+    trim: new THREE.MeshStandardMaterial({ map: wtex, roughness: 0.9, side: THREE.DoubleSide }),
+    mesh: new THREE.MeshStandardMaterial({ color: lin(0x2E2A22), roughness: 1, side: THREE.DoubleSide, transparent: true, opacity: 0.93 }),
+    inside: new THREE.MeshBasicMaterial({ color: lin(0x3A2C1E), side: THREE.DoubleSide }),
+    floor: new THREE.MeshStandardMaterial({ color: lin(0x3B3A35), roughness: 0.7 }),
+    steel: new THREE.MeshStandardMaterial({ color: lin(0xC8C6C0), metalness: 0.7, roughness: 0.3 }),
+    rope: new THREE.LineBasicMaterial({ color: 0xEDE6D8, transparent: true, opacity: 0.75 }),
+    label: new THREE.MeshStandardMaterial({ color: lin(0xEFE9DC), roughness: 0.8, side: THREE.DoubleSide }),
+    curl: new THREE.MeshStandardMaterial({ map: wtex, color: lin(0xCFC6B4), roughness: 0.9, side: THREE.DoubleSide }),
+    seam: new THREE.MeshStandardMaterial({ roughness: 1, side: THREE.DoubleSide })
   };
+  mats.trim.color = lin(0xE6E1D6);
 
   function recolor() {
     const c = D.colors.find((x) => x.id === state.color);
-    mats.wall.color.set(c.wall).convertSRGBToLinear();
-    mats.roof.color.set(c.roof).convertSRGBToLinear();
+    mats.wall.color = lin(c.wall);
+    mats.roof.color = lin(c.roof);
+    mats.seam.color = lin(c.shade);
   }
 
-  /* geometry helpers */
-  function polyMesh(points, mat) {
-    // points: array of THREE.Vector3 (convex, ordered) -> triangle fan
-    const pos = [];
-    const uv = [];
-    for (let i = 1; i < points.length - 1; i++) {
-      [points[0], points[i], points[i + 1]].forEach((p) => { pos.push(p.x, p.y, p.z); uv.push(p.x + p.z, p.y); });
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+
+  /* ---------- tent geometry ---------- */
+  let G = null; // current geometry params
+
+  // point on a wall: s = 0..1 across (viewer's left → right), t = 0 (top) .. 1 (ground)
+  function wallPoint(face, s, t) {
+    const { W, Dp, H, Wr, Dr, P } = G;
+    let T, B;
+    if (face === 'front') { T = [-Wr / 2 + s * Wr, Dr / 2]; B = [-W / 2 + s * W, Dp / 2]; }
+    else if (face === 'back') { T = [Wr / 2 - s * Wr, -Dr / 2]; B = [W / 2 - s * W, -Dp / 2]; }
+    else if (face === 'right') { T = [Wr / 2, Dr / 2 - s * Dr]; B = [W / 2, Dp / 2 - s * Dp]; }
+    else { T = [-Wr / 2, -Dr / 2 + s * Dr]; B = [-W / 2, -Dp / 2 + s * Dp]; }
+    const f = 0.55 * t + 0.45 * Math.pow(t, P);
+    const p = V(T[0] + (B[0] - T[0]) * f, G.H * (1 - t), T[1] + (B[1] - T[1]) * f);
+    // corners pulled out to the stakes, hem lifts between stake points
+    const corner = Math.pow(t, 5) * 0.07 * Math.pow(Math.abs(2 * s - 1), 10);
+    if (corner > 0) p.add(V(p.x, 0, p.z).normalize().multiplyScalar(corner));
+    if (t > 0.9) p.y += 0.06 * Math.pow(Math.sin(Math.PI * ((s * 2) % 1)), 1.5) * (t - 0.9) / 0.1;
+    return p;
+  }
+  const OUT = { front: V(0, 0, 1), back: V(0, 0, -1), right: V(1, 0, 0), left: V(-1, 0, 0) };
+
+  function gridMesh(fn, nu, nv, mat, uvScale) {
+    const pos = [], uv = [], idx = [];
+    for (let j = 0; j <= nv; j++) for (let i = 0; i <= nu; i++) {
+      const p = fn(i / nu, j / nv);
+      pos.push(p.x, p.y, p.z); uv.push((i / nu) * (uvScale ? uvScale[0] : 1), (j / nv) * (uvScale ? uvScale[1] : 1));
+    }
+    for (let j = 0; j < nv; j++) for (let i = 0; i < nu; i++) {
+      const a = j * (nu + 1) + i, b = a + 1, c = a + nu + 1, d = c + 1;
+      idx.push(a, c, b, b, c, d);
     }
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
     g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-    g.computeVertexNormals();
-    const m = new THREE.Mesh(g, mat);
-    m.castShadow = true; m.receiveShadow = true;
+    g.setIndex(idx); g.computeVertexNormals();
+    const m = new THREE.Mesh(g, mat); m.castShadow = true; m.receiveShadow = true;
     return m;
+  }
+  // panel that follows the curved wall: range(t) returns [s0, s1]
+  function wallPanel(face, t0, t1, range, mat, lift) {
+    const off = OUT[face].clone().multiplyScalar(lift || 0.006);
+    return gridMesh((u, v) => {
+      const t = t0 + (t1 - t0) * v;
+      const [s0, s1] = range(t);
+      return wallPoint(face, s0 + (s1 - s0) * u, t).add(off);
+    }, 10, 14, mat);
   }
   function rod(a, b, r, mat) {
     const dir = new THREE.Vector3().subVectors(b, a);
-    const len = dir.length();
-    const g = new THREE.CylinderGeometry(r, r, len, 10);
-    const m = new THREE.Mesh(g, mat);
-    m.position.copy(a).add(dir.multiplyScalar(0.5));
-    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3().subVectors(b, a).normalize());
-    m.castShadow = true;
-    return m;
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, dir.length(), 10), mat);
+    m.position.copy(a).addScaledVector(dir, 0.5);
+    m.quaternion.setFromUnitVectors(V(0, 1, 0), dir.clone().normalize());
+    m.castShadow = true; return m;
   }
-  function line(a, b) {
-    const g = new THREE.BufferGeometry().setFromPoints([a, b]);
-    return new THREE.Line(g, mats.rope);
-  }
-  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  const line = (a, b) => new THREE.Line(new THREE.BufferGeometry().setFromPoints([a, b]), mats.rope);
 
   let tent = null;
   const hotspotDefs = [];
 
   function buildTent() {
     const m = D.models.find((x) => x.id === state.model);
-    const W = m.w, Dp = m.d, RH = m.h, EH = 1.3, IN = 0.28;
-    const zf = Dp / 2, zb = -Dp / 2;
+    G = { W: m.w, Dp: m.d, H: m.h, Wr: m.w * m.rw, Dr: m.d * m.rd, P: 3.2 };
+    const { W, Dp, H, Wr, Dr } = G;
     const g = new THREE.Group();
 
-    const A = (z) => V(-W / 2, 0, z), B = (z) => V(W / 2, 0, z);
-    const C = (z) => V(W / 2 - IN, EH, z), E = (z) => V(-W / 2 + IN, EH, z), R = (z) => V(0, RH, z);
-
-    // gables
-    g.add(polyMesh([A(zf), B(zf), C(zf), R(zf), E(zf)], mats.wall));
-    g.add(polyMesh([A(zb), E(zb), R(zb), C(zb), B(zb)], mats.wall));
-    // side walls
-    g.add(polyMesh([B(zf), B(zb), C(zb), C(zf)], mats.wall));
-    g.add(polyMesh([A(zb), A(zf), E(zf), E(zb)], mats.wall));
-    // roof
-    g.add(polyMesh([C(zf), C(zb), R(zb), R(zf)], mats.roof));
-    g.add(polyMesh([E(zb), E(zf), R(zf), R(zb)], mats.roof));
+    // walls (side walls get more texture repeats)
+    ['front', 'back', 'left', 'right'].forEach((f) => {
+      g.add(gridMesh((u, v) => wallPoint(f, u, v), 18, 18, mats.wall, [W * 0.8, H * 0.8]));
+    });
+    // vertical seams on the side walls
+    ['left', 'right'].forEach((f) => [0.33, 0.66].forEach((s) => {
+      g.add(wallPanel(f, 0.02, 1, () => [s - 0.0025, s + 0.0025], mats.seam, 0.004));
+    }));
     // floor
-    const fl = new THREE.Mesh(new THREE.PlaneGeometry(W + 0.04, Dp + 0.04), mats.floor);
-    fl.rotation.x = -Math.PI / 2; fl.position.y = 0.01; fl.receiveShadow = true; g.add(fl);
+    const fl = new THREE.Mesh(new THREE.PlaneGeometry(W, Dp), mats.floor);
+    fl.rotation.x = -Math.PI / 2; fl.position.y = 0.004; fl.receiveShadow = true; g.add(fl);
 
-    // door
-    const dz = zf + 0.006, dw = 0.5, dt = 0.28, dh = RH - 0.32;
-    if (state.door) {
-      g.add(polyMesh([V(-dw, 0.02, dz), V(dw, 0.02, dz), V(dt, dh, dz), V(-dt, dh, dz)], mats.mesh));
-      const glowPanel = polyMesh([V(-dw + 0.08, 0.04, dz - 0.3), V(dw - 0.08, 0.04, dz - 0.3), V(dt - 0.06, dh - 0.2, dz - 0.3), V(-dt + 0.06, dh - 0.2, dz - 0.3)], mats.glow);
-      glowPanel.castShadow = false; glowPanel.material = mats.glow; g.add(glowPanel);
-      // rolled flaps
-      [-1, 1].forEach((s) => {
-        const roll = rod(V(s * (dw + 0.08), 0.15, dz + 0.03), V(s * (dt + 0.1), dh - 0.05, dz + 0.03), 0.06, mats.wall);
-        g.add(roll);
-      });
-    } else {
-      const zip = rod(V(0, 0.02, dz + 0.004), V(0, dh, dz + 0.004), 0.008, mats.mesh);
-      g.add(zip);
-    }
-    // back window
-    const wz = zb - 0.006;
-    g.add(polyMesh([V(-0.5, EH + 0.1, wz), V(0, RH - 0.25, wz), V(0.5, EH + 0.1, wz)], mats.mesh));
-    // side windows
-    [-1, 1].forEach((s) => {
-      const x0 = s * (W / 2 - 0.05), x1 = s * (W / 2 - IN + 0.07);
-      const off = s * 0.012;
-      g.add(polyMesh([V(x0 + off, 0.45, -0.45), V(x0 + off, 0.45, 0.45), V(x1 + off, EH - 0.12, 0.45), V(x1 + off, EH - 0.12, -0.45)], mats.mesh));
+    // roof: tensioned panel with a slight crown, ends curling over the spring bars
+    const ext = 0.1;
+    g.add(gridMesh((u, v) => {
+      const x = -Wr / 2 - ext + u * (Wr + 2 * ext);
+      const z = -Dr / 2 + v * Dr;
+      const crown = 0.035 * (1 - Math.pow((2 * u - 1), 2));
+      const edge = Math.max(0, Math.abs(2 * u - 1) - 0.86) / 0.14; // 0..1 near the ends
+      return V(x, H + 0.03 + crown - edge * edge * 0.06, z);
+    }, 24, 8, mats.roof, [Wr, Dr]));
+    // curled roof ends (rolled over the bar ends)
+    [-1, 1].forEach((sgn) => {
+      const curve = new THREE.LineCurve3(V(sgn * (Wr / 2 + ext - 0.03), H - 0.04, -Dr / 2 - 0.06), V(sgn * (Wr / 2 + ext - 0.03), H - 0.04, Dr / 2 + 0.06));
+      const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 4, 0.085, 14, false), mats.curl);
+      tube.castShadow = true; g.add(tube);
     });
+    // roof skirt binding along front/back top edge
+    ['front', 'back'].forEach((f) => g.add(wallPanel(f, 0, 0.035, () => [0, 1], mats.trim, 0.005)));
 
-    // poles
-    const pr = 0.022;
-    g.add(rod(V(0, 0, zf + 0.02), V(0, RH + 0.06, zf + 0.02), pr, mats.steel));
-    g.add(rod(V(0, 0, zb - 0.02), V(0, RH + 0.06, zb - 0.02), pr, mats.steel));
-    g.add(rod(V(0, RH + 0.04, zb - 0.02), V(0, RH + 0.04, zf + 0.02), pr * 0.9, mats.steel));
-    [[1, zf], [-1, zf], [1, zb], [-1, zb]].forEach(([s, z]) => {
-      const zz = z + Math.sign(z) * 0.04;
-      g.add(rod(V(s * (W / 2 + 0.02), 0, zz), V(s * (W / 2 - IN), EH + 0.02, zz), pr, mats.steel));
-    });
-    // spring bars (bowed along eaves)
-    [1, -1].forEach((s) => {
-      const x = s * (W / 2 - IN + 0.01);
-      const curve = new THREE.QuadraticBezierCurve3(V(x, EH + 0.05, zb - 0.12), V(x + s * 0.06, EH + 0.18, 0), V(x, EH + 0.05, zf + 0.12));
-      const bar = new THREE.Mesh(new THREE.TubeGeometry(curve, 30, 0.026, 8, false), mats.steel);
+    // spring bars (front & back, slightly bowed by tension)
+    [1, -1].forEach((sz) => {
+      const z = sz * (Dr / 2 + 0.015);
+      const curve = new THREE.QuadraticBezierCurve3(V(-Wr / 2 - 0.1, H + 0.03, z), V(0, H + 0.075, z), V(Wr / 2 + 0.1, H + 0.03, z));
+      const bar = new THREE.Mesh(new THREE.TubeGeometry(curve, 30, 0.014, 8, false), mats.steel);
       bar.castShadow = true; g.add(bar);
     });
-    // guy lines + stakes
-    [[1, zf], [-1, zf], [1, zb], [-1, zb]].forEach(([s, z]) => {
-      const top = V(s * (W / 2 - IN), EH, z);
-      const stake = V(s * (W / 2 + 0.9), 0, z + Math.sign(z) * 0.9);
-      g.add(line(top, stake));
-      g.add(rod(stake, V(stake.x, 0.12, stake.z), 0.015, mats.steel));
+    // corner poles follow the wall corners
+    const pr = 0.017;
+    [['front', 0], ['front', 1], ['back', 0], ['back', 1]].forEach(([f, s]) => {
+      const top = wallPoint(f, s, 0).add(V(0, 0.03, 0)), bot = wallPoint(f, s, 1);
+      const out = V(top.x, 0, top.z).normalize().multiplyScalar(0.02);
+      g.add(rod(top.add(out), bot.clone().add(out), pr, mats.steel));
     });
-    [zf, zb].forEach((z) => {
-      const top = V(0, RH + 0.05, z), stake = V(0, 0, z + Math.sign(z) * 1.4);
-      g.add(line(top, stake));
+    if (m.centerPole) [1, -1].forEach((sz) => g.add(rod(V(0, 0, sz * (Dr / 2 - 0.02)), V(0, H + 0.05, sz * (Dr / 2 - 0.02)), pr, mats.steel)));
+
+    // openings
+    const open = state.door;
+    const addDoor = (face, type) => {
+      if (type === 'rollup') {
+        const s0 = m.id === 'compact' ? 0.34 : 0.33, s1 = 1 - s0, t0 = 0.12;
+        if (open) {
+          g.add(wallPanel(face, t0, 1, () => [s0, s1], mats.mesh, 0.008));
+          g.add(wallPanel(face, t0, 1, () => [0.497, 0.503], mats.trim, 0.011));
+          // rolled-up door at the top
+          const a = wallPoint(face, s0 - 0.01, t0 - 0.03).add(OUT[face].clone().multiplyScalar(0.05));
+          const b = wallPoint(face, s1 + 0.01, t0 - 0.03).add(OUT[face].clone().multiplyScalar(0.05));
+          g.add(rod(a, b, 0.045, mats.wall));
+        } else {
+          g.add(wallPanel(face, t0, 1, () => [0.497, 0.503], mats.mesh, 0.008));
+        }
+        g.add(wallPanel(face, t0 - 0.02, t0, () => [s0 - 0.01, s1 + 0.01], mats.trim, 0.009));
+      } else {
+        const c = type === 'a-left' ? 0.37 : 0.5;
+        const t0 = 0.08;
+        const hw = (t) => 0.012 + 0.105 * Math.pow((t - t0) / (1 - t0), 0.9);
+        if (open) {
+          g.add(wallPanel(face, t0, 1, (t) => [c - hw(t), c + hw(t)], mats.mesh, 0.008));
+          // tied-back flaps
+          [-1, 1].forEach((sg) => g.add(wallPanel(face, 0.32, 1, (t) => {
+            const e = c + sg * hw(t);
+            return sg < 0 ? [e - 0.055, e] : [e, e + 0.055];
+          }, mats.wall, 0.016)));
+        } else {
+          g.add(wallPanel(face, t0, 1, () => [c - 0.003, c + 0.003], mats.mesh, 0.008));
+        }
+      }
+    };
+    const addWindow = (face, s0, s1, t0, t1) => {
+      g.add(wallPanel(face, t0 - 0.025, t1 + 0.025, () => [s0 - 0.02, s1 + 0.02], mats.trim, 0.006));
+      g.add(wallPanel(face, t0, t1, () => [s0, s1], mats.mesh, 0.009));
+    };
+    addDoor('front', m.door);
+    if (m.id === 'traveler') addWindow('front', 0.55, 0.8, 0.12, 0.9);
+    if (m.back === 'rollup') addDoor('back', 'rollup');
+    if (m.back === 'window-center') addWindow('back', 0.36, 0.64, 0.14, 0.62);
+    if (m.back === 'window-wide') { addWindow('back', 0.2, 0.8, 0.1, 0.56); g.add(wallPanel('back', 0.1, 0.56, () => [0.497, 0.503], mats.trim, 0.012)); }
+    if (m.back === 'window-pair') { addWindow('back', 0.2, 0.47, 0.1, 0.86); addWindow('back', 0.53, 0.8, 0.1, 0.86); }
+
+    // Springbar triangle label
+    const lab = m.door === 'a-left' ? 0.13 : (m.door === 'a-center' ? 0.24 : 0.2);
+    g.add(wallPanel('front', 0.62, 0.8, (t) => { const k = (t - 0.62) / 0.18; const hw = 0.05 * (1 - k) * (W > 2.5 ? 0.8 : 1); return [lab - hw, lab + hw]; }, mats.label, 0.012));
+
+    // stakes + guy lines
+    const stakes = [];
+    ['front', 'back', 'left', 'right'].forEach((f) => [0, 0.5, 1].forEach((s) => stakes.push(wallPoint(f, s, 1))));
+    stakes.forEach((p) => {
+      const o = V(p.x, 0, p.z).normalize().multiplyScalar(0.08);
+      g.add(rod(p.clone().add(o), p.clone().add(o).add(V(0, 0.07, 0)), 0.008, mats.steel));
+    });
+    [[1, 1], [-1, 1], [1, -1], [-1, -1]].forEach(([sx, sz]) => {
+      const top = V(sx * (Wr / 2 + 0.1), H + 0.03, sz * (Dr / 2 + 0.015));
+      g.add(line(top, V(sx * (W / 2 + 0.7), 0, sz * (Dp / 2 + 0.9))));
     });
 
-    // awning
+    // awning off the front spring bar
     if (state.awning) {
-      const L = 1.7;
-      const fz = zf + L;
-      g.add(polyMesh([R(zf + 0.02), V(0, RH - 0.18, fz), V(W / 2 - IN + 0.15, EH - 0.05, fz), C(zf + 0.02)], mats.roof));
-      g.add(polyMesh([E(zf + 0.02), V(-W / 2 + IN - 0.15, EH - 0.05, fz), V(0, RH - 0.18, fz), R(zf + 0.02)], mats.roof));
-      [1, -1].forEach((s) => {
-        const top = V(s * (W / 2 - IN + 0.15), EH - 0.05, fz);
-        g.add(rod(V(top.x, 0, top.z), top, pr, mats.steel));
-        g.add(line(top, V(top.x + s * 0.6, 0, top.z + 0.9)));
+      const L = Math.min(2.0, Dp * 0.7), AW = Wr + 0.25;
+      g.add(gridMesh((u, v) => {
+        const x = -AW / 2 + u * AW, z = Dr / 2 + 0.02 + v * L;
+        const y = H + 0.03 + v * 0.12 - Math.sin(Math.PI * v) * 0.05 - Math.pow(2 * u - 1, 2) * 0.04 * v;
+        return V(x, y, z);
+      }, 12, 10, mats.wall, [AW, L]));
+      [-1, 1].forEach((sx) => {
+        const top = V(sx * (AW / 2 - 0.02), H + 0.11, Dr / 2 + L);
+        g.add(rod(V(top.x, 0, top.z), top.clone().add(V(0, 0.08, 0)), pr, mats.steel));
+        g.add(line(top, V(top.x + sx * 0.5, 0, top.z + 0.9)));
       });
     }
 
-    // hotspots (local positions)
+    /* hotspots */
     hotspotDefs.length = 0;
     hotspotDefs.push(
-      { key: 'bar', pos: V(W / 2 - IN + 0.05, EH + 0.16, -Dp * 0.15), title: 'Spring Bar', text: 'เหล็กสปริงสองเส้นดึงผ้าให้ตึงจากมุมถึงมุม คือที่มาของชื่อ Springbar' },
-      { key: 'canvas', pos: V(W / 2 - 0.12, 0.7, Dp * 0.25), title: 'Cotton Duck Canvas', text: 'ผ้าฝ้ายหนา หายใจได้ เย็นกลางวัน อุ่นกลางคืน ไอน้ำเกาะน้อย' },
-      { key: 'door', pos: V(0, 1.1, zf + 0.05), title: 'Big Front Door', text: 'ประตูกว้างพร้อมมุ้ง พับเก็บผูกด้านข้างได้ เปิดรับลมเต็มที่' },
-      { key: 'roof', pos: V(-W / 4, (EH + RH) / 2 + 0.05, -Dp * 0.2), title: 'Light Roof Panel', text: 'หลังคาสีอ่อนสะท้อนแดด ช่วยลดความร้อนภายในเต้นท์' },
-      { key: 'window', pos: V(0, EH + 0.3, zb - 0.05), title: 'Vent Windows', text: 'หน้าต่างมุ้งรอบตัว สร้างลมไหลผ่านแบบ cross-ventilation' }
+      { pos: V(Wr * 0.18, H + 0.08, Dr / 2 + 0.02), title: 'Spring Bar', text: 'เหล็กสปริงชุบแข็งด้านหน้าและหลัง ดึงหลังคาให้ตึงตลอดเวลา หัวใจที่ทำให้ Springbar กางง่ายและนิ่งกลางลม' },
+      { pos: wallPoint('right', 0.5, 0.55).add(V(0.02, 0, 0)), title: 'Cotton Duck Canvas', text: 'ผ้าฝ้ายแคนวาสหนา ระบายอากาศได้ กันน้ำด้วยการเคลือบ อยู่ได้นานเป็นสิบปีถ้าดูแลดี' },
+      { pos: wallPoint('front', m.door === 'a-left' ? 0.37 : 0.5, 0.45).add(V(0, 0, 0.03)), title: m.door === 'rollup' ? 'Roll-up Door' : '26" Door', text: m.door === 'rollup' ? 'ประตูม้วนเก็บด้านบน พร้อมมุ้งกันแมลงเต็มบาน' : 'ประตูกว้าง 26 นิ้วพร้อมมุ้ง พับผูกเก็บด้านข้างได้' },
+      { pos: V(-Wr * 0.2, H + 0.06, 0), title: 'Standing Height', text: `สูงภายใน ${m.ftH} — ${m.h > 1.8 ? 'ยืนเปลี่ยนเสื้อผ้าได้สบาย' : 'นั่งสบาย นอนอุ่น ทรงเตี้ยต้านลมได้ดี'}` },
+      { pos: wallPoint('left', 0.25, 0.92).add(V(-0.03, 0, 0)), title: 'Flared Walls', text: 'ผนังบานออกทุกด้านแบบ Springbar พื้นที่ใช้สอยเต็มถึงขอบ ลมปะทะแล้วไหลผ่าน' },
+      { pos: wallPoint('back', 0.5, 0.35).add(V(0, 0, -0.03)), title: 'Views & Airflow', text: m.openings }
     );
-    if (state.awning) hotspotDefs.push({ key: 'awning', pos: V(0, RH - 0.15, zf + 1.4), title: 'Awning', text: 'กันสาดผ้าแคนวาส ต่อพื้นที่นั่งเล่นหน้าเต้นท์อีกหนึ่งห้อง' });
+    if (state.awning) hotspotDefs.push({ pos: V(0, H + 0.1, Dr / 2 + Math.min(2.0, Dp * 0.7) * 0.6), title: 'Awning', text: 'กันสาดผ้าแคนวาสต่อจากสปริงบาร์ด้านหน้า ได้ระเบียงร่มเงาเพิ่มอีกหนึ่งห้อง' });
 
-    warm.position.set(0, 0.9, 0);
-    warm.intensity = state.door ? 0.6 : 0.2;
     return g;
   }
 
   let rebuildT = 0;
-  function rebuild() {
-    if (tent) {
-      scene.remove(tent);
-      tent.traverse((o) => { if (o.geometry) o.geometry.dispose(); });
-    }
+  function rebuild(reframe) {
+    if (tent) { scene.remove(tent); tent.traverse((o) => { if (o.geometry) o.geometry.dispose(); }); }
     tent = buildTent();
     recolor();
     scene.add(tent);
-    tent.scale.setScalar(0.92);
     rebuildT = performance.now();
     buildHotspots();
+    if (reframe) frame();
+  }
+  function frame() {
+    const size = Math.max(G.W, G.Dp + (state.awning ? 1.6 : 0));
+    controls.target.set(0, G.H * 0.45, state.awning ? 0.5 : 0);
+    const dir = camera.position.clone().sub(controls.target).normalize();
+    const dist = size * 2.3 + 2.2;
+    camera.position.copy(controls.target).addScaledVector(dir, dist);
+    controls.minDistance = dist * 0.55; controls.maxDistance = dist * 1.8;
   }
 
-  /* ---------- hotspots (DOM) ---------- */
+  /* ---------- hotspots ---------- */
   const hsWrap = $('#hotspots');
   let hsEls = [];
   function buildHotspots() {
@@ -310,88 +399,79 @@
       hsWrap.appendChild(el);
       return el;
     });
-    hsWrap.style.display = state.labels ? '' : 'none';
+    hsWrap.hidden = !state.labels;
   }
-  const tmp = new THREE.Vector3(), camDir = new THREE.Vector3();
+  const tmp = new THREE.Vector3();
   function updateHotspots() {
     if (!state.labels) return;
     const w = viewer.clientWidth, h = viewer.clientHeight;
-    camera.getWorldDirection(camDir);
+    const toCam = camera.position.clone().sub(controls.target).setY(0).normalize();
     hotspotDefs.forEach((d, i) => {
       const el = hsEls[i]; if (!el) return;
       tmp.copy(d.pos).project(camera);
       const x = (tmp.x * 0.5 + 0.5) * w, y = (-tmp.y * 0.5 + 0.5) * h;
       el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
-      // hide if facing away: compare vector from target to point with camera direction
       const toPt = d.pos.clone().sub(controls.target).setY(0);
-      const toCam = camera.position.clone().sub(controls.target).setY(0);
-      const facing = toPt.length() < 0.2 || toPt.normalize().dot(toCam.normalize()) > -0.15;
+      const facing = toPt.length() < 0.35 || toPt.normalize().dot(toCam) > -0.1;
       el.classList.toggle('is-hidden', !facing);
-      // flip card when near right edge
-      const card = el.querySelector('.hotspot__card');
-      card.style.left = x > w - 240 ? '-230px' : '18px';
+      el.querySelector('.hotspot__card').style.left = x > w - 240 ? '-232px' : '18px';
     });
   }
 
-  /* ---------- controls UI ---------- */
+  /* ---------- controls ---------- */
   const angle = $('#angle'), angleOut = $('#angleOut'), autoBtn = $('#autoRotate'), hint = $('#dragHint');
   const setAuto = (on) => { state.auto = on; controls.autoRotate = on; autoBtn.setAttribute('aria-pressed', on); };
   autoBtn.addEventListener('click', () => setAuto(!state.auto));
   angle.addEventListener('input', () => {
     setAuto(false);
-    const az = (+angle.value) * Math.PI / 180;
     const off = camera.position.clone().sub(controls.target);
     const sph = new THREE.Spherical().setFromVector3(off);
-    sph.theta = az;
+    sph.theta = (+angle.value) * Math.PI / 180;
     off.setFromSpherical(sph);
     camera.position.copy(controls.target).add(off);
   });
   controls.addEventListener('start', () => { hint.classList.add('is-gone'); setAuto(false); hsEls.forEach((x) => x.classList.remove('is-open')); });
-  $('#tAwning').addEventListener('change', (e) => { state.awning = e.target.checked; rebuild(); });
-  $('#tDoor').addEventListener('change', (e) => { state.door = e.target.checked; rebuild(); });
-  $('#tLabels').addEventListener('change', (e) => { state.labels = e.target.checked; hsWrap.style.display = state.labels ? '' : 'none'; });
+  $('#tAwning').addEventListener('change', (e) => { state.awning = e.target.checked; rebuild(true); });
+  $('#tDoor').addEventListener('change', (e) => { state.door = e.target.checked; rebuild(false); });
+  $('#tLabels').addEventListener('change', (e) => { state.labels = e.target.checked; hsWrap.hidden = !state.labels; });
 
   function resize() {
     const w = viewer.clientWidth, h = viewer.clientHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    camera.fov = w < 600 ? 44 : 34;
+    camera.fov = w < 600 ? 42 : 32;
     camera.updateProjectionMatrix();
   }
   new ResizeObserver(resize).observe(viewer);
   resize();
 
-  // render only when visible
-  let visible = false, raf = null;
+  let raf = null;
   function loop(now) {
     raf = requestAnimationFrame(loop);
     if (tent) {
-      const t = Math.min((now - rebuildT) / 600, 1);
-      tent.scale.setScalar(0.92 + 0.08 * (1 - Math.pow(1 - t, 3)));
+      const t = Math.min((now - rebuildT) / 700, 1);
+      tent.scale.setScalar(0.94 + 0.06 * (1 - Math.pow(1 - t, 3)));
     }
     controls.update();
     const off = camera.position.clone().sub(controls.target);
-    let deg = Math.round((Math.atan2(off.x, off.z) * 180 / Math.PI + 360) % 360);
+    const deg = Math.round((Math.atan2(off.x, off.z) * 180 / Math.PI + 360) % 360);
     if (document.activeElement !== angle) angle.value = deg;
     angleOut.textContent = String(deg).padStart(3, '0') + '°';
     renderer.render(scene, camera);
     updateHotspots();
   }
   new IntersectionObserver((entries) => {
-    visible = entries[0].isIntersecting;
-    if (visible && !raf) raf = requestAnimationFrame(loop);
-    if (!visible && raf) { cancelAnimationFrame(raf); raf = null; }
+    const vis = entries[0].isIntersecting;
+    if (vis && !raf) raf = requestAnimationFrame(loop);
+    if (!vis && raf) { cancelAnimationFrame(raf); raf = null; }
   }, { threshold: 0.05 }).observe(viewer);
 
-  rebuild();
+  rebuild(true);
   renderer.render(scene, camera);
 
-  // keep studio in sync when configurator changes model/colour
   window.USCampStudio.set = function (model, color) {
-    let changed = false;
-    if (model && model !== state.model) { state.model = model; changed = true; }
     if (color && color !== state.color) { state.color = color; recolor(); }
+    if (model && model !== state.model) { setModel(model); return; }
     updateUI();
-    if (changed) rebuild();
   };
 })();
