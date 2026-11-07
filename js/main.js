@@ -113,6 +113,11 @@
   /* ---------- nav ---------- */
   const nav = $('#nav');
   const burger = $('#burger');
+  // real nav height (strip + bar) so the hero always starts below it
+  const setNavH = () => document.documentElement.style.setProperty('--nav-h', nav.offsetHeight + 'px');
+  setNavH();
+  window.addEventListener('resize', setNavH);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(setNavH);
   let lastY = 0;
   const progressBar = $('#scrollProgress');
   const dock = $('#dock');
