@@ -588,3 +588,7 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
   .grain { display: none; }
 }
+
+/* hero Thai tagline under the headline */
+.hero__title { margin-bottom: 14px; }
+.hero__sub { margin: 0 0 18px; font-size: clamp(19px, 2vw, 28px); font-weight: 500; line-height: 1.4; color: var(--tan); text-wrap: balance; }
