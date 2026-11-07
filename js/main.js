@@ -51,7 +51,10 @@
   /* ---------- intro ---------- */
   const intro = $('#intro');
   document.body.classList.add('is-loading');
+  let introDone = false;
   const endIntro = () => {
+    if (introDone) return;
+    introDone = true;
     intro.classList.add('is-done');
     document.body.classList.remove('is-loading');
     setTimeout(() => {
@@ -65,8 +68,11 @@
     endIntro();
   } else {
     try { sessionStorage.setItem('uscamp-intro', '1'); } catch (e) { /* ignore */ }
-    window.addEventListener('load', () => setTimeout(endIntro, 1900));
-    setTimeout(() => { if (document.body.contains(intro)) endIntro(); }, 4500); // safety
+    // short title card; any tap, click or key skips it
+    window.addEventListener('load', () => setTimeout(endIntro, 1200));
+    intro.addEventListener('pointerdown', endIntro);
+    window.addEventListener('keydown', endIntro, { once: true });
+    setTimeout(endIntro, 3200); // never block a slow connection for long
   }
 
   /* ---------- split headlines into words ---------- */
@@ -108,11 +114,22 @@
   const nav = $('#nav');
   const burger = $('#burger');
   let lastY = 0;
+  const progressBar = $('#scrollProgress');
+  const dock = $('#dock');
+  const build = $('#build'), visit = $('#visit');
   const onScroll = () => {
     const y = window.scrollY;
     nav.classList.toggle('is-solid', y > 40);
     nav.classList.toggle('is-hidden', y > lastY && y > 500 && !nav.classList.contains('is-open'));
     lastY = y;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    if (progressBar) progressBar.style.transform = `scaleX(${max > 0 ? (y / max).toFixed(4) : 0})`;
+    // mobile action dock: after the hero, hidden while the visitor is already building or booking
+    if (dock) {
+      const inBuild = build.getBoundingClientRect().top < innerHeight * 0.6 && build.getBoundingClientRect().bottom > innerHeight * 0.4;
+      const inVisit = visit.getBoundingClientRect().top < innerHeight * 0.8;
+      dock.classList.toggle('is-on', y > innerHeight * 0.85 && !inBuild && !inVisit);
+    }
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
@@ -150,45 +167,42 @@
     }, { passive: true });
   }
 
-  /* ---------- story chapters ---------- */
-  const frames = $$('#storyVisual .frame');
-  const chapters = $$('.chapter');
-  const storyNum = $('#storyNum');
-  let current = 0;
-  const showChapter = (i) => {
-    if (i === current) return;
-    const prev = frames[current];
-    prev.classList.remove('is-active');
-    prev.classList.add('is-leaving');
-    setTimeout(() => prev.classList.remove('is-leaving'), 1100);
-    frames[i].classList.add('is-active');
-    current = i;
-    storyNum.textContent = String(i + 1).padStart(2, '0');
-  };
-  const chapIO = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) {
-        chapters.forEach((c) => c.classList.remove('is-active'));
-        e.target.classList.add('is-active');
-        showChapter(+e.target.dataset.chapter);
-      }
-    });
-  }, { rootMargin: '-45% 0px -45% 0px' });
-  chapters.forEach((c) => chapIO.observe(c));
-  chapters[0].classList.add('is-active');
+  /* ---------- story spreads: image wipes in, text follows ---------- */
+  const spreadIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); spreadIO.unobserve(e.target); } });
+  }, { threshold: 0.2 });
+  $$('.spread').forEach((el) => spreadIO.observe(el));
 
   /* ---------- a day at camp ---------- */
   const day = $('#day');
   const tabs = $$('.day__tab');
   const progress = $('#dayProgress');
   const times = tabs.map((t) => t.dataset.time);
-  let dayIdx = 0, dayTimer = null, dayStart = 0, dayRAF = null, dayVisible = false, userPicked = false;
+  let dayIdx = 0, dayStart = 0, dayRAF = null, dayVisible = false, userPicked = false, paused = false, pausedAt = 0;
   const DUR = 7000;
+
+  // ambient backdrop: a blurred copy of each moment's photo
+  const sky = $('.day__sky', day);
+  $$('.postcard', day).forEach((p) => {
+    const bg = document.createElement('div');
+    bg.className = 'day__bg';
+    bg.dataset.time = p.dataset.time;
+    bg.style.backgroundImage = `url("${p.querySelector('img').getAttribute('src')}")`;
+    sky.appendChild(bg);
+  });
+  // pause auto-play while the visitor is reading or touching the stage
+  const stage = $('.day__stage', day);
+  const pause = () => { if (!paused) { paused = true; pausedAt = performance.now(); } };
+  const resume = () => { if (paused) { paused = false; dayStart += performance.now() - pausedAt; } };
+  stage.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') pause(); });
+  stage.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') resume(); });
+  stage.addEventListener('touchstart', () => { userPicked = true; }, { passive: true });
 
   const setTime = (i) => {
     dayIdx = i;
     const t = times[i];
     day.dataset.time = t;
+    $$('.day__bg', day).forEach((b) => b.classList.toggle('is-active', b.dataset.time === t));
     tabs.forEach((b, k) => { b.classList.toggle('is-active', k === i); b.setAttribute('aria-selected', k === i); });
     $$('.postcard', day).forEach((p) => p.classList.toggle('is-active', p.dataset.time === t));
     $$('.moment', day).forEach((m) => m.classList.toggle('is-active', m.dataset.time === t));
@@ -199,7 +213,7 @@
   };
   const tick = (now) => {
     const tab = tabs[dayIdx];
-    const p = Math.min((now - dayStart) / DUR, 1);
+    const p = Math.min(((paused ? pausedAt : now) - dayStart) / DUR, 1);
     progress.style.width = (userPicked ? tab.offsetWidth : tab.offsetWidth * p) + 'px';
     if (!userPicked && p >= 1 && dayVisible) setTime((dayIdx + 1) % times.length);
     dayRAF = requestAnimationFrame(tick);
@@ -220,17 +234,28 @@
   const form = $('#visitForm');
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    let ok = true;
+    let first = null;
     $$('[required]', form).forEach((f) => {
       const bad = !f.value.trim();
       f.classList.toggle('is-invalid', bad);
-      if (bad) ok = false;
+      f.setAttribute('aria-invalid', bad);
+      const hint = f.parentElement.querySelector('.field-err');
+      if (hint) hint.hidden = !bad;
+      if (bad && !first) first = f;
     });
     const msg = $('#formMsg');
-    if (!ok) { msg.textContent = 'กรุณากรอกชื่อและช่องทางติดต่อ'; return; }
-    msg.textContent = `ขอบคุณครับคุณ ${form.name.value.trim()} — Camp Advisor ของเราจะติดต่อกลับภายใน 1 วันทำการ ★`;
+    if (first) { msg.textContent = ''; first.focus(); return; }
+    const name = form.name.value.trim();
+    form.classList.add('is-sent');
+    $('#formDone').hidden = false;
+    $('#formDoneName').textContent = name;
     form.reset();
   });
+  $$('[required]', form).forEach((f) => f.addEventListener('input', () => {
+    if (f.value.trim()) { f.classList.remove('is-invalid'); f.removeAttribute('aria-invalid'); const h = f.parentElement.querySelector('.field-err'); if (h) h.hidden = true; }
+  }));
+  const again = $('#formAgain');
+  if (again) again.addEventListener('click', () => { form.classList.remove('is-sent'); $('#formDone').hidden = true; });
 
   $('#year').textContent = new Date().getFullYear();
 })();

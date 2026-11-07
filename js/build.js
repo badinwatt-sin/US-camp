@@ -153,18 +153,25 @@
   /* ---------- steps ---------- */
   let step = 0;
   const stepBtns = $$('#steps button'), stepPanes = $$('.build .step');
-  function goStep(i) {
+  function goStep(i, opts) {
     step = Math.max(0, Math.min(stepPanes.length - 1, i));
     stepBtns.forEach((b, k) => { b.classList.toggle('is-active', k === step); b.classList.toggle('is-done', k < step); b.setAttribute('aria-selected', k === step); });
     stepPanes.forEach((p, k) => p.classList.toggle('is-active', k === step));
     $('#prevStep').style.visibility = step === 0 ? 'hidden' : 'visible';
-    $('#nextStep').textContent = step === stepPanes.length - 1 ? 'ดู Camp Card ↓' : 'ถัดไป →';
+    $('#nextStep').textContent = step === stepPanes.length - 1 ? 'ดู Camp Card ↓' : `ถัดไป: ${stepBtns[step + 1].querySelector('span').textContent} →`;
+    $('#stepCount').textContent = `ขั้นที่ ${step + 1} จาก ${stepPanes.length}`;
+    // on phones, bring the options back under the sticky preview when the step changes
+    if (opts && opts.scroll && window.innerWidth < 1081) {
+      const panel = $('.build__panel');
+      const top = panel.getBoundingClientRect().top + window.scrollY - (document.querySelector('.build__scene').offsetHeight + 16);
+      if (Math.abs(window.scrollY - top) > 40) window.scrollTo({ top, behavior: 'smooth' });
+    }
   }
-  stepBtns.forEach((b, i) => b.addEventListener('click', () => goStep(i)));
-  $('#prevStep').addEventListener('click', () => goStep(step - 1));
+  stepBtns.forEach((b, i) => b.addEventListener("click", () => goStep(i, { scroll: true })));
+  $('#prevStep').addEventListener("click", () => goStep(step - 1, { scroll: true }));
   $('#nextStep').addEventListener('click', () => {
     if (step === stepPanes.length - 1) { $('#campCard').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
-    goStep(step + 1);
+    goStep(step + 1, { scroll: true });
   });
 
   $('#presets').addEventListener('click', (e) => {

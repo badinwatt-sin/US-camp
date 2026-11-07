@@ -39,6 +39,7 @@
     <span class="hide-xs">★ Springbar® — cut &amp; sewn in Salt Lake City, Utah ★</span><span class="show-xs">★ Springbar® · Salt Lake City ★</span>
     <span class="hide-sm">จอง Pitch Day ลองกางเต้นท์จริงที่โชว์รูม</span>
   </div>
+  <i class="nav__progress" id="scrollProgress" aria-hidden="true"></i>
   <div class="nav__bar">
     <a href="#top" class="nav__logo" aria-label="US Camp home"><svg><use href="#logo"/></svg></a>
     <nav class="nav__links" id="navLinks">
@@ -101,42 +102,33 @@
     <p class="section-head__lead reveal">ทุกหลังเริ่มจากร้านผ้าใบเล็กๆ ในยูทาห์ ช่างเย็บคนหนึ่ง กับคำขอของลูกค้าที่อยากได้เต้นท์ <em>กว้าง แข็งแรง และกางง่าย</em></p>
   </header>
 
-  <div class="story__wrap">
-    <div class="story__visual" id="storyVisual">
-      <figure class="frame is-active" data-chapter="0">
-        <img src="assets/img/real/detail-stamp.jpg" alt="ช่างกำลังตอกโลโก้ Springbar ลงบนแผ่นทองเหลือง" loading="lazy" />
-        <figcaption>1944 · The canvas shop on 200 South</figcaption>
-      </figure>
-      <figure class="frame" data-chapter="1">
-        <img src="assets/img/real/vintage.jpg" alt="ภาพขาวดำยุคแรก กลุ่มผู้ชายกำลังกางเต้นท์ Springbar ในป่าสน" loading="lazy" style="object-position:30% 50%" />
-        <figcaption>1961 · The first Springbar® Tent</figcaption>
-      </figure>
-      <figure class="frame" data-chapter="2">
-        <img src="assets/img/real/snow.jpg" alt="เต้นท์ Springbar ตั้งอยู่กลางหิมะที่เพิ่งตก" loading="lazy" />
-        <figcaption>Tension holds · first snow</figcaption>
-      </figure>
-      <figure class="frame" data-chapter="3">
-        <img src="assets/img/workshop.jpg" alt="เต้นท์ Springbar สีน้ำตาลกางอยู่ในเวิร์กช็อปเย็บผ้าใบ" loading="lazy" />
-        <figcaption>Still cut &amp; sewn in Salt Lake City</figcaption>
-      </figure>
-      <div class="story__counter"><span id="storyNum">01</span> / 04</div>
-    </div>
-
-    <div class="story__chapters">
-      <article class="chapter" data-chapter="0">
-        <span class="chapter__year">1944</span>
+  <div class="spreads">
+    <article class="spread">
+      <figure class="spread__img"><img src="assets/img/real/detail-stamp.jpg" alt="ช่างกำลังตอกโลโก้ Springbar ลงบนแผ่นทองเหลือง" loading="lazy" /><figcaption>The canvas shop on 200 South</figcaption></figure>
+      <div class="spread__text">
+        <p class="spread__no">No. 01 / 04</p>
+        <span class="spread__year">1944</span>
         <h3>A canvas shop, 1,200 square feet</h3>
         <p>หลังทำงานเป็นช่างเขียนแบบในอู่ต่อเรือของกองทัพเรือ Jack Kirkham Sr. กลับบ้านที่ Salt Lake City แล้วซื้อร้าน AAA Tent &amp; Awning ร้านผ้าใบเล็กๆ ขนาดแค่ 1,200 ตารางฟุต</p>
-        <p>เขาเย็บทุกอย่างที่ทำจากผ้าใบ ตั้งแต่ผ้าคลุมเกวียนคนต้อนแกะ ผ้าห่มม้า ไปจนถึงกระโจมและเต้นท์ผนังตรงให้คนเลี้ยงสัตว์และคนทำเหมือง พอถึงยุค 50 คนอเมริกันเริ่มออกไปแคมป์เพื่อพักผ่อน Jack ก็เริ่มสังเกตว่าเต้นท์แบบเดิมยังมีอะไรต้องแก้อีกเยอะ</p>
-      </article>
-      <article class="chapter" data-chapter="1">
-        <span class="chapter__year">1961</span>
+        <p>เขาเย็บทุกอย่างที่ทำจากผ้าใบ ตั้งแต่ผ้าคลุมเกวียนคนต้อนแกะ ผ้าห่มม้า ไปจนถึงกระโจมให้คนเลี้ยงสัตว์และคนทำเหมือง พอถึงยุค 50 คนอเมริกันเริ่มออกไปแคมป์เพื่อพักผ่อน Jack ก็เริ่มเห็นว่าเต้นท์แบบเดิมยังมีอะไรต้องแก้อีกเยอะ</p>
+      </div>
+    </article>
+    <article class="spread">
+      <figure class="spread__img"><img src="assets/img/real/vintage.jpg" alt="ภาพขาวดำยุคแรก กลุ่มผู้ชายกำลังกางเต้นท์ Springbar ในป่าสน" loading="lazy" style="object-position:28% 50%" /><figcaption>The first Springbar® Tent</figcaption></figure>
+      <div class="spread__text">
+        <p class="spread__no">No. 02 / 04</p>
+        <span class="spread__year">1961</span>
         <h3>Spacious. Sturdy. Easy to pitch.</h3>
         <p>ลูกค้าขอแค่สามข้อ Jack ตอบด้วยโครงแบบใหม่ทั้งหมด คือเหล็กสปริงสองเส้นที่ดึงหลังคาผ้าให้ตึง แทนเสาและเชือกที่ระโยงระยางเต็มลาน</p>
-        <p>เต้นท์ 10×10 ฟุตหลังแรกตั้งราคาไว้ <strong>$83</strong> และกลายเป็น Traveler ในตำนานที่ผลิตต่อเนื่องมาจนวันนี้ Jack เรียกมันว่า <em>“masterpiece of simplicity and function”</em></p>
-      </article>
-      <article class="chapter" data-chapter="2">
-        <span class="chapter__year">The Frame</span>
+        <p>เต้นท์ 10×10 ฟุตหลังแรกตั้งราคาไว้ <strong>$83</strong> และกลายเป็น Traveler ในตำนานที่ผลิตต่อเนื่องมาจนวันนี้</p>
+        <blockquote class="spread__quote">“A masterpiece of simplicity and function.”<cite>Jack Kirkham Sr.</cite></blockquote>
+      </div>
+    </article>
+    <article class="spread">
+      <figure class="spread__img"><img src="assets/img/real/snow.jpg" alt="เต้นท์ Springbar ตั้งอยู่กลางหิมะที่เพิ่งตก" loading="lazy" /><figcaption>First snow · still standing</figcaption></figure>
+      <div class="spread__text">
+        <p class="spread__no">No. 03 / 04</p>
+        <span class="spread__year">The Frame</span>
         <h3>Tension is the whole trick</h3>
         <p>สปริงบาร์เหล็กชุบแข็งด้านหน้าและหลังดันหลังคาให้ตึงตลอดเวลา ผนังทั้งสี่ด้านบานลงพื้น ลมที่ปะทะจึงไหลผ่านแทนที่จะผลัก ผ้าไม่สะบัด ไม่มีเสียงพึ่บพั่บกวนการนอน</p>
         <ul class="ticks">
@@ -144,15 +136,18 @@
           <li>พื้นไวนิล 12oz แบบไร้ตะเข็บ กันน้ำ 100%</li>
           <li>มุ้ง no-see-um เกรดทหาร กันได้แม้แมลงตัวจิ๋ว</li>
         </ul>
-      </article>
-      <article class="chapter" data-chapter="3">
-        <span class="chapter__year">Today</span>
+      </div>
+    </article>
+    <article class="spread">
+      <figure class="spread__img"><img src="assets/img/workshop.jpg" alt="เต้นท์ Springbar สีน้ำตาลกางอยู่ในเวิร์กช็อปเย็บผ้าใบ" loading="lazy" /><figcaption>Still cut &amp; sewn in Salt Lake City</figcaption></figure>
+      <div class="spread__text">
+        <p class="spread__no">No. 04 / 04</p>
+        <span class="spread__year">Today</span>
         <h3>Same hands, same city</h3>
-        <p>ร้านผ้าใบของ Jack ขยายเป็น Kirkham’s Outdoor Products ในปี 1979 ส่งต่อให้ Jack Jr. ที่ช่วยพ่อทำงานมาตั้งแต่อายุ 15 จนปี 2019 เวิร์กช็อปย้ายไปถนน West Temple เพื่อโฟกัสกับการทำเต้นท์ Springbar อย่างเดียว</p>
+        <p>ร้านผ้าใบของ Jack ขยายเป็น Kirkham’s Outdoor Products ในปี 1979 แล้วส่งต่อให้ Jack Jr. ที่ช่วยพ่อทำงานมาตั้งแต่อายุ 15 ปี 2019 เวิร์กช็อปย้ายไปถนน West Temple เพื่อทำเต้นท์ Springbar อย่างเดียว</p>
         <p class="muted">ทุกหลังยังติดป้าย “Est. 1961 · Manufactured in SLC Utah USA” เหมือนเดิม</p>
-        <a href="#craft" class="link-arrow">ดูรายละเอียดงานฝีมือ →</a>
-      </article>
-    </div>
+      </div>
+    </article>
   </div>
 
   <!-- craft details -->
@@ -345,6 +340,7 @@
         <li><button role="tab" data-step="3">4<span>Living</span></button></li>
         <li><button role="tab" data-step="4">5<span>เวลา</span></button></li>
       </ol>
+      <p class="step__count" id="stepCount" aria-live="polite">ขั้นที่ 1 จาก 5</p>
 
       <div class="step is-active" data-step="0">
         <h4>คืนนี้คุณจะกางที่ไหน?</h4>
@@ -413,24 +409,51 @@
         <li>เทียบขนาดทุกรุ่น ตั้งแต่ Compact ถึง Traveler</li>
         <li>วิธีดูแลผ้าแคนวาสหน้าฝนและอากาศร้อนชื้น</li>
       </ul>
-      <figure class="visit__photo"><img src="assets/img/real/lantern.jpg" alt="เต้นท์ Springbar สีแทนเปิดประตูใต้แสงตะเกียงตอนกลางคืน" loading="lazy" /><figcaption>photo courtesy of @twora-camp</figcaption></figure>
-    </div>
-    <form class="visit__form" id="visitForm" novalidate>
-      <h3>Book a Pitch Day</h3>
-      <label for="fName">ชื่อของคุณ<input id="fName" name="name" required autocomplete="name" /></label>
-      <label for="fContact">เบอร์โทร หรือ LINE ID<input id="fContact" name="contact" required /></label>
-      <div class="form-row">
-        <label for="fDate">วันที่สะดวก<input id="fDate" type="date" name="date" /></label>
-        <label for="fPeople">จำนวนคน<select id="fPeople" name="people"><option>1–2</option><option>3–4</option><option>5+</option></select></label>
+      <div class="visit__contact">
+        <p class="eyebrow">หรือคุยกับเราโดยตรง</p>
+        <dl>
+          <div><dt>LINE</dt><dd>@uscamp</dd></div>
+          <div><dt>Email</dt><dd>hello@uscamp.co</dd></div>
+          <div><dt>Showroom</dt><dd>Bangkok · เสาร์–อาทิตย์ 10:00–18:00</dd></div>
+        </dl>
       </div>
-      <label for="campField">แคมป์ที่คุณออกแบบไว้<textarea name="camp" id="campField" rows="5" placeholder="กด “ส่งแคมป์นี้ให้ Camp Advisor” ในส่วน Build Your Camp แล้วรายละเอียดจะมาอยู่ตรงนี้"></textarea></label>
-      <button class="btn btn--ink btn--block" type="submit">จอง Pitch Day</button>
-      <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
-    </form>
+    </div>
+    <div class="visit__card">
+      <form class="visit__form" id="visitForm" novalidate>
+        <div class="visit__formhead">
+          <h3>Book a Pitch Day</h3>
+          <p>ใช้เวลากรอกไม่ถึงนาที</p>
+        </div>
+        <label for="fName">ชื่อของคุณ<input id="fName" name="name" required autocomplete="name" aria-describedby="errName" /><span class="field-err" id="errName" hidden>ใส่ชื่อที่ให้เราเรียกได้</span></label>
+        <label for="fContact">เบอร์โทร หรือ LINE ID<input id="fContact" name="contact" required autocomplete="tel" aria-describedby="errContact" /><span class="field-err" id="errContact" hidden>ใส่เบอร์โทรหรือ LINE ID เพื่อให้เรานัดเวลา</span></label>
+        <div class="form-row">
+          <label for="fDate">วันที่สะดวก<input id="fDate" type="date" name="date" /></label>
+          <label for="fPeople">จำนวนคน<select id="fPeople" name="people"><option>1–2</option><option>3–4</option><option>5+</option></select></label>
+        </div>
+        <label for="campField">แคมป์ที่คุณออกแบบไว้ <span class="optional">(ไม่บังคับ)</span><textarea name="camp" id="campField" rows="4" placeholder="กด “ส่งแคมป์นี้ให้ Camp Advisor” ในส่วน Build Your Camp แล้วรายละเอียดจะมาอยู่ตรงนี้"></textarea></label>
+        <button class="btn btn--ink btn--block" type="submit">จอง Pitch Day</button>
+        <ul class="visit__trust">
+          <li>ไม่มีค่าใช้จ่าย</li><li>ตอบกลับใน 1 วันทำการ</li><li>ลองได้ทุกรุ่น</li>
+        </ul>
+        <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
+      </form>
+      <div class="visit__done" id="formDone" hidden>
+        <svg viewBox="0 0 40 40" aria-hidden="true"><use href="#star"/></svg>
+        <h3>See you at camp, <span id="formDoneName"></span></h3>
+        <p>เราได้รับคำขอ Pitch Day ของคุณแล้ว Camp Advisor จะติดต่อกลับภายใน 1 วันทำการเพื่อนัดวันและเวลา</p>
+        <button class="btn btn--line btn--sm" type="button" id="formAgain">จองให้อีกคน</button>
+      </div>
+    </div>
   </div>
 </section>
 
 </main>
+
+<!-- mobile action dock -->
+<nav class="dock" id="dock" aria-label="ทางลัด">
+  <a href="#build" class="btn btn--cream btn--sm">ออกแบบแคมป์</a>
+  <a href="#visit" class="btn btn--ink btn--sm">จอง Pitch Day</a>
+</nav>
 
 <footer class="footer">
   <div class="footer__top">
