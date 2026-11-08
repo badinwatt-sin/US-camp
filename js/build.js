@@ -35,8 +35,24 @@
   D.colors.forEach((c) => groups.color.insertAdjacentHTML('beforeend',
     `<button class="swatch" data-id="${c.id}" title="${c.name}" aria-label="${c.name}" style="--wall:${c.wall};--roof:${c.roof}"></button>`));
   groups.color.insertAdjacentHTML('afterend', '<p class="swatch-name" id="cfgColorName"></p>');
+  /* ---------- real product photo + simulated price for each option ---------- */
+  const CAT = window.USCampCatalog, STORE = window.USCampStore;
+  const thb = (n) => (STORE ? STORE.thb(n) : '฿' + n.toLocaleString());
+  // lines = the shop products this option puts in the cart, for the current tent model
+  function gearLines(item, model) {
+    if (!CAT || !item.sku) return [];
+    return item.sku.map(([id, v]) => {
+      const variant = v && typeof v === 'object' ? v[model] : v;
+      const r = CAT.resolve(id, variant);
+      return r ? { id, variant: variant || null, name: r.product.name, label: r.label, price: r.price, image: r.image, partner: !!r.product.partner } : null;
+    }).filter(Boolean);
+  }
+  const gearTotal = (item, model) => gearLines(item, model).reduce((n, l) => n + l.price, 0);
+  const gearImage = (item, model) => item.img || (gearLines(item, model)[0] || {}).image || '';
+  window.USCampGear = { lines: gearLines, total: gearTotal };
+
   ['shelter', 'living'].forEach((g) => D.items[g].forEach((i) => groups[g].insertAdjacentHTML('beforeend',
-    `<button class="item" data-id="${i.id}" aria-pressed="false"><svg viewBox="0 0 40 40"><path d="${i.icon}"/></svg><span><b>${i.name}</b><small>${i.th}</small></span><i></i></button>`)));
+    `<button class="item item--photo" data-id="${i.id}" aria-pressed="false"><span class="item__img"><img src="${gearImage(i, state.model)}" alt="" loading="lazy"/></span><span class="item__body"><b>${i.name}</b><small>${i.th}</small><em class="item__price" data-price="${i.id}"></em></span><i></i></button>`)));
   const moodThumb = { dawn: 'ranger-morning', noon: 'awning-shade', golden: 'desert-dusk', night: 'lantern' };
   D.moods.forEach((mo) => groups.mood.insertAdjacentHTML('beforeend',
     `<button class="card" data-id="${mo.id}"><span class="card__img"><img src="assets/img/real/${moodThumb[mo.id]}.jpg" alt="" loading="lazy"/></span><b>${mo.name}</b><small>${mo.th} · ${mo.time}</small></button>`));
@@ -129,13 +145,22 @@
   }
 
   function renderCard(m, c, t, mo) {
-    const rows = [`<li><span><b>Springbar® ${m.name}</b> · ${c.name}</span><span>${m.ft} · ${m.sleeps} คน</span></li>`];
-    allItems.filter((i) => state.items.includes(i.id)).forEach((i) => {
-      rows.push(`<li><span>${i.name}</span><span>${D.items.shelter.includes(i) ? 'Shelter' : 'Living'}</span></li>`);
+    const tent = CAT ? CAT.resolve('tent-' + m.id, c.id) : null;
+    const chosen = allItems.filter((i) => state.items.includes(i.id));
+    let total = tent ? tent.price : 0;
+    const row = (img, name, sub, price, cls = '') => `<li class="cc-row ${cls}"><span class="cc-row__img"><img src="${img}" alt="" loading="lazy"/></span><span class="cc-row__name"><b>${name}</b>${sub ? `<small>${sub}</small>` : ''}</span><span class="cc-row__price">${price}</span></li>`;
+    const rows = [];
+    if (tent) rows.push(row(tent.image, `Springbar® ${m.name}`, `${c.name} · ${m.ft} · ${m.sleeps} คน`, thb(tent.price), 'cc-row--tent'));
+    chosen.forEach((i) => {
+      if (i.included) { rows.push(row(gearImage(i, m.id), i.name, 'มาพร้อมเต้นท์ Traveler', 'รวมแล้ว', 'cc-row--incl')); return; }
+      const lines = gearLines(i, m.id);
+      const sum = lines.reduce((n, l) => n + l.price, 0); total += sum;
+      const sub = lines.map((l) => l.label || '').filter(Boolean).join(' · ') + (lines.some((l) => l.partner) ? (lines.some((l) => l.label) ? ' · ' : '') + 'สินค้าพาร์ทเนอร์' : '');
+      rows.push(row(gearImage(i, m.id), i.name, sub, thb(sum)));
     });
-    rows.push(`<li><span>Setting</span><span>${t.name} · ${mo.name}</span></li>`);
-    $('#gearList').innerHTML = rows.join('');
-    $('#itemCount').textContent = `${state.items.length + 1} items`;
+    $('#gearList').innerHTML = rows.join('') + `<li class="cc-total"><span>รวม ${chosen.length + 1} รายการ</span><b>${thb(total)}</b></li><li class="cc-meta">${t.name} · ${mo.name} · ราคาจำลอง รอยืนยันราคาจริง</li>`;
+    $('#itemCount').textContent = `${chosen.length + 1} items`;
+    const cp = $('#campPrice'); if (cp) cp.textContent = thb(total);
   }
 
   function syncControls() {
@@ -145,6 +170,11 @@
     $$('.build .item').forEach((b) => {
       const on = state.items.includes(b.dataset.id);
       b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on);
+      const item = allItems.find((x) => x.id === b.dataset.id);
+      const pr = b.querySelector('.item__price');
+      if (pr) pr.textContent = item.included ? (state.model === 'traveler' ? 'มาพร้อม Traveler' : 'เฉพาะ Traveler') : thb(gearTotal(item, state.model));
+      const im = b.querySelector('.item__img img'), src = gearImage(item, state.model);
+      if (im && src && im.getAttribute('src') !== src) im.src = src;
       const off = b.dataset.id === 'awning' && state.model !== 'traveler';
       b.classList.toggle('is-unavailable', off); b.setAttribute('aria-disabled', off);
     });

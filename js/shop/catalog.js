@@ -48,7 +48,19 @@
       desc: 'กระเป๋าดัฟเฟิลผ้าแคนวาสสำหรับทริปสุดสัปดาห์ จุเสื้อผ้า 2–3 วันพอดี' }
   ].map((a) => Object.assign({ type: 'accessory', short: a.name, leadTime: 'พร้อมส่ง 2–3 วันทำการหลังยืนยันราคา' }, a));
 
-  const all = [...tents, ...accessories];
+  // camp gear US Camp sources from partners (not made by Springbar); photos are crops of real camp photography
+  const partner = [
+    { id: 'wood-stove', name: 'Wood Stove (ทำงานร่วมกับ Stove Jack)', th: 'เตาฟืนสแตนเลสพร้อมปล่อง', price: 8900, img: 'assets/img/gear/stove.jpg' },
+    { id: 'sleep-kit', name: 'Sleep Kit (เตียงสนาม + ถุงนอน)', th: 'ชุดนอน 2 ที่', price: 7900, img: 'assets/img/gear/sleep.jpg' },
+    { id: 'chairs', name: 'Canvas Camp Chairs ×2', th: 'เก้าอี้ผ้าใบ 2 ตัว', price: 4590, img: 'assets/img/gear/chairs.jpg' },
+    { id: 'table', name: 'Wood Camp Table', th: 'โต๊ะไม้พับได้', price: 3290, img: 'assets/img/gear/table.jpg' },
+    { id: 'lantern', name: 'Brass Lantern', th: 'ตะเกียงแขวน', price: 1890, img: 'assets/img/gear/lantern.jpg' },
+    { id: 'string-lights', name: 'Vintage String Lights 10 m', th: 'ไฟสายวินเทจ', price: 890, img: 'assets/img/gear/lights.jpg' },
+    { id: 'fire-pit', name: 'Fire Pit + Grill Pan', th: 'ลานก่อไฟพร้อมกระทะ', price: 2990, img: 'assets/img/gear/fire.jpg' },
+    { id: 'cooler', name: 'Hard Cooler 45 L', th: 'กระติกน้ำแข็ง', price: 3490, img: 'assets/img/gear/cooler.jpg' }
+  ].map((a) => ({ type: 'accessory', category: 'partner', hidden: true, partner: true, short: a.name, leadTime: 'สินค้าพาร์ทเนอร์ · ยืนยันสต็อกกับร้าน', desc: a.th + ' (สินค้าพาร์ทเนอร์ ภาพตัวอย่างจากแคมป์จริง)', image: () => a.img, ...a }));
+
+  const all = [...tents, ...accessories, ...partner];
   const byId = (id) => all.find((p) => p.id === id);
 
   // price + image for a product with an optional variant/option

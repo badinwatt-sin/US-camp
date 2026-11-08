@@ -19,7 +19,7 @@
   function minPrice(p) { return p.options ? Math.min(...p.options.map((o) => o.price)) : p.price; }
 
   function render() {
-    let list = C.all.filter((p) => cat === 'all' || p.category === cat);
+    let list = C.all.filter((p) => !p.hidden && (cat === 'all' || p.category === cat));
     if (sort === 'low') list = list.slice().sort((a, b) => minPrice(a) - minPrice(b));
     if (sort === 'high') list = list.slice().sort((a, b) => minPrice(b) - minPrice(a));
     $('#grid').innerHTML = list.map((p) => {

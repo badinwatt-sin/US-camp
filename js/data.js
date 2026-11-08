@@ -58,21 +58,21 @@ window.USCampData = {
   },
   items: {
     shelter: [
-      { id: 'awning', name: 'Front Awning · Traveler', th: 'กันสาดหน้าเต้นท์ มีเฉพาะรุ่น Traveler', icon: 'M4 18 L20 8 L36 18 M8 18 V34 M32 18 V34' },
-      { id: 'fly', name: 'Stormfly® Rain Fly', th: 'ฟลายชีทกันฝนหนัก สำหรับหน้ามรสุม', icon: 'M2 20 L20 6 L38 20 M8 16 L8 32 M32 16 L32 32' },
-      { id: 'tarp', name: 'Ground Tarp', th: 'ผ้าปูรองพื้นตามขนาดเต้นท์ ปกป้องพื้นไวนิล', icon: 'M4 28 L14 20 H36 L26 28 Z' },
-      { id: 'stove', name: 'Stove Jack + Wood Stove', th: 'ช่องปล่องควันซิปได้ + เตาฟืน อุ่นทั้งคืน', icon: 'M10 34 V20 H28 V34 M24 20 V4 H28 V20 M14 26 H24' },
-      { id: 'cot', name: 'Canvas Cots', th: 'เตียงสนาม นอนสบายเหนือพื้น', icon: 'M4 20 H36 M8 20 L6 30 M32 20 L34 30 M8 16 H18' },
-      { id: 'loft', name: 'Gear Loft + Organizer', th: 'ตาข่ายเก็บของใต้หลังคาและที่แขวนของ', icon: 'M4 10 H36 L32 18 H8 Z M10 22 H30 V32 H10Z' }
+      { id: 'awning', name: 'Front Awning · Traveler', th: 'กันสาดหน้าเต้นท์ มาพร้อม Traveler', sku: [], included: true, img: 'assets/img/products/traveler-suntan.jpg', icon: 'M4 18 L20 8 L36 18 M8 18 V34 M32 18 V34' },
+      { id: 'fly', name: 'Stormfly® Rain Fly', th: 'ฟลายชีทกันฝนหนัก สำหรับหน้ามรสุม', sku: [['stormfly', { compact: 'compact', outfitter: 'compact', vagabond: 'medium', traveler: 'medium' }]], icon: 'M2 20 L20 6 L38 20 M8 16 L8 32 M32 16 L32 32' },
+      { id: 'tarp', name: 'Ground Tarp', th: 'ผ้าปูรองพื้นตามขนาดเต้นท์ ปกป้องพื้นไวนิล', sku: [['ground-tarp', { compact: '6x8', outfitter: '7x9', vagabond: '8x10', traveler: '10x10' }]], icon: 'M4 28 L14 20 H36 L26 28 Z' },
+      { id: 'stove', name: 'Stove Jack + Wood Stove', th: 'ช่องปล่องควันแบบซิป + เตาฟืน อุ่นทั้งคืน', sku: [['stove-jack'], ['wood-stove']], icon: 'M10 34 V20 H28 V34 M24 20 V4 H28 V20 M14 26 H24' },
+      { id: 'cot', name: 'Sleep Kit', th: 'เตียงสนาม + ถุงนอน 2 ที่', sku: [['sleep-kit']], icon: 'M4 20 H36 M8 20 L6 30 M32 20 L34 30 M8 16 H18' },
+      { id: 'loft', name: 'Hanging Organizer', th: 'ที่แขวนเก็บของในเต้นท์', sku: [['organizer']], icon: 'M4 10 H36 L32 18 H8 Z M10 22 H30 V32 H10Z' }
     ],
     living: [
-      { id: 'rug', name: 'Wool Camp Rug', th: 'พรมทอลายหน้าประตู', icon: 'M6 14 H34 L30 28 H2 Z M10 18 H28' },
-      { id: 'chairs', name: 'Canvas Chairs', th: 'เก้าอี้ผ้าใบโครงไม้', icon: 'M8 32 L12 14 H26 L30 32 M10 22 H28' },
-      { id: 'table', name: 'Wood Camp Table', th: 'โต๊ะไม้พับได้', icon: 'M4 16 H36 M10 16 L8 32 M30 16 L32 32' },
-      { id: 'lantern', name: 'Brass Lantern', th: 'ตะเกียงแขวน แสงเหลืองนวล', icon: 'M14 10 H26 V30 H14 Z M18 4 H22 V10 M17 16 H23 V24 H17Z' },
-      { id: 'lights', name: 'String Lights', th: 'ไฟสายวินเทจ', icon: 'M2 10 Q20 26 38 10 M10 16 v4 M20 18 v4 M30 16 v4' },
-      { id: 'fire', name: 'Fire Pit', th: 'ลานก่อไฟ', icon: 'M8 32 L32 24 M8 24 L32 32 M20 24 C12 16 18 10 20 4 C22 10 28 16 20 24' },
-      { id: 'cooler', name: 'Classic Cooler', th: 'กระติกน้ำแข็งสีครีม', icon: 'M6 14 H34 V32 H6 Z M6 18 H34 M16 24 H24' }
+      { id: 'rug', name: 'Door Mat', th: 'พรมผ้าใบหน้าประตู Springbar®', sku: [['door-mat']], icon: 'M6 14 H34 L30 28 H2 Z M10 18 H28' },
+      { id: 'chairs', name: 'Canvas Chairs ×2', th: 'เก้าอี้ผ้าใบ 2 ตัว', sku: [['chairs']], icon: 'M8 32 L12 14 H26 L30 32 M10 22 H28' },
+      { id: 'table', name: 'Wood Camp Table', th: 'โต๊ะไม้พับได้', sku: [['table']], icon: 'M4 16 H36 M10 16 L8 32 M30 16 L32 32' },
+      { id: 'lantern', name: 'Brass Lantern + Strap', th: 'ตะเกียงแขวน + สายแขวน Springbar®', sku: [['lantern'], ['lantern-strap']], icon: 'M14 10 H26 V30 H14 Z M18 4 H22 V10 M17 16 H23 V24 H17Z' },
+      { id: 'lights', name: 'String Lights', th: 'ไฟสายวินเทจ 10 เมตร', sku: [['string-lights']], icon: 'M2 10 Q20 26 38 10 M10 16 v4 M20 18 v4 M30 16 v4' },
+      { id: 'fire', name: 'Fire Pit', th: 'ลานก่อไฟพร้อมกระทะ', sku: [['fire-pit']], icon: 'M8 32 L32 24 M8 24 L32 32 M20 24 C12 16 18 10 20 4 C22 10 28 16 20 24' },
+      { id: 'cooler', name: 'Hard Cooler', th: 'กระติกน้ำแข็ง 45 ลิตร', sku: [['cooler']], icon: 'M6 14 H34 V32 H6 Z M6 18 H34 M16 24 H24' }
     ]
   },
   presets: {
