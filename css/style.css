@@ -392,8 +392,8 @@ section { position: relative; }
 .toggles { display: flex; gap: 18px; flex-wrap: wrap; }
 .toggle { display: inline-flex; align-items: center; gap: 10px; font-size: 15px; cursor: pointer; }
 .toggle input { position: absolute; opacity: 0; }
-.toggle > span { width: 40px; height: 22px; border-radius: 99px; background: rgba(31, 26, 20, .2); position: relative; transition: background .3s; }
-.toggle > span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--paper); transition: transform .3s var(--ease); }
+.toggle > input + span { width: 40px; height: 22px; border-radius: 99px; background: rgba(31, 26, 20, .2); position: relative; transition: background .3s; }
+.toggle > input + span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--paper); transition: transform .3s var(--ease); }
 .toggle input:checked + span { background: var(--saddle); }
 .toggle input:checked + span::after { transform: translateX(18px); }
 .toggle input:focus-visible + span { outline: 2px dashed var(--rust); outline-offset: 2px; }
@@ -976,3 +976,25 @@ p, li, figcaption, small, .studio__desc, .hero__sub, .section-head__lead, blockq
 @media (max-width: 1080px) { .studio__viewer { position: relative; top: 0; } }
 #autoRotate { white-space: nowrap; flex: none; }
 @media (max-width: 480px) { #autoRotate { padding: 4px 9px; font-size: 12px; } }
+
+/* ---- v6: 3D vector model + real-photo views ---- */
+.studio__viewer { padding: 66px 14px 76px; background: #FBFAF7; }
+.studio__viewer::before { top: 52px; }
+.stage3d { position: relative; width: 100%; aspect-ratio: 4 / 3; max-height: 70vh; }
+.stage3d #tentCanvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+.stage3d #tentCanvas:active { cursor: grabbing; }
+.stage3d .studio__hotspots { position: absolute; inset: 0; pointer-events: none; }
+.stage3d .hotspot { left: 0; top: 0; }
+.stage3d .studio__hint { top: auto; bottom: 8px; }
+.studio__photo { position: absolute; inset: 0; z-index: 5; margin: 0; background: #fff; display: grid; place-items: center; padding: 70px 16px 40px; opacity: 0; pointer-events: none; transition: opacity .45s var(--ease); }
+.studio__photo img { width: 100%; max-height: 100%; object-fit: contain; transition: opacity .3s; }
+.studio__photo img.is-swapping { opacity: .3; }
+.studio__photo figcaption { position: absolute; left: 16px; right: 16px; bottom: 14px; text-align: center; font-size: 13px; color: var(--saddle); }
+.studio__viewer:not([data-view="3d"]) .studio__photo { opacity: 1; pointer-events: auto; }
+.studio__viewer:not([data-view="3d"]) .studio__dial { visibility: hidden; }
+.view-tabs { z-index: 6; }
+@media (max-width: 480px) {
+  .studio__viewer { padding: 58px 6px 66px; }
+  .stage3d { aspect-ratio: 1 / 1; }
+  .view-tab { padding: 6px 8px; font-size: 11.5px; }
+}
