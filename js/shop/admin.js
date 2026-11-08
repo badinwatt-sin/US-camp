@@ -85,7 +85,7 @@
     $('#odNo').textContent = o.no;
     $('#odDate').textContent = 'สร้างเมื่อ ' + S.dateTH(o.createdAt) + ' · โหมดสาธิต';
     const p = o.payment, sh = o.shipping;
-    const addr = sh.method === 'pickup'
+    const addr = (sh.method === 'pickup' || sh.method === 'pos')
       ? `รับที่ร้าน · ${esc(sh.pickupDate)} ${esc(sh.pickupTime)}`
       : `${esc(sh.address.line1)} ${esc(sh.address.subdistrict)} ${esc(sh.address.district)} ${esc(sh.address.province)} ${esc(sh.address.postcode)}${sh.address.note ? `<br><i>หมายเหตุ: ${esc(sh.address.note)}</i>` : ''}`;
     const slip = p.slip && p.slip.image ? `<button class="slip-thumb" data-slip><img src="${p.slip.image}" alt="สลิปการโอน"/><span>ดูสลิปขนาดเต็ม</span></button><p class="fine">${p.slip.bank ? 'โอนจาก ' + esc(p.slip.bank) + ' · ' : ''}${p.slip.time ? esc(p.slip.time.replace('T', ' ')) + ' · ' : ''}แนบเมื่อ ${S.dateTH(p.slip.uploadedAt)}</p>` : '';
@@ -113,7 +113,7 @@
         <h3>อัปเดตสถานะการจัดส่ง</h3>
         <form id="stForm" class="f-grid" novalidate>
           <label class="f" for="stSel">สถานะใหม่<select id="stSel">${st.map((s) => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${S.STATUS[s].label}</option>`).join('')}</select></label>
-          ${sh.method === 'pickup' ? '' : `
+          ${(sh.method === 'pickup' || sh.method === 'pos') ? '' : `
           <label class="f" for="stCarrier">บริษัทขนส่ง<select id="stCarrier"><option value="">— เลือก —</option>${S.CARRIERS.map((c) => `<option ${c === sh.carrier ? 'selected' : ''}>${c}</option>`).join('')}</select></label>
           <label class="f f--full" for="stTrack">เลขพัสดุ (Tracking No.)<input id="stTrack" value="${esc(sh.trackingNo || '')}" placeholder="เช่น KEX123456789TH" autocomplete="off"/><span class="err" hidden>ใส่บริษัทขนส่งและเลขพัสดุเมื่อเปลี่ยนเป็น “ส่งมอบให้ขนส่งแล้ว”</span></label>`}
           <label class="f f--full" for="stNote">ข้อความถึงลูกค้า / บันทึก<input id="stNote" placeholder="เช่น แพ็กพร้อมผ้าปูรองพื้นแล้ว"/></label>
@@ -209,7 +209,7 @@
   $('#wipe').addEventListener('click', (e) => {
     const b = e.currentTarget;
     if (b.dataset.confirm !== '1') { b.dataset.confirm = '1'; b.textContent = 'กดอีกครั้งเพื่อลบทั้งหมด'; setTimeout(() => { b.dataset.confirm = ''; b.textContent = 'ล้างข้อมูลสาธิต'; }, 4000); return; }
-    S.orders.reset(); b.dataset.confirm = ''; b.textContent = 'ล้างข้อมูลสาธิต'; UI.toast('ล้างข้อมูลสาธิตแล้ว');
+    S.orders.reset(); if (window.USCampInventory) window.USCampInventory.reset(); b.dataset.confirm = ''; b.textContent = 'ล้างข้อมูลสาธิต'; UI.toast('ล้างข้อมูลสาธิตแล้ว');
   });
 
   if (authed()) enter();

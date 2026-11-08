@@ -41,7 +41,10 @@ python3 -m http.server 8000
 | `shop.html` | Catalogue (4 tents × 5 colours + 10 accessories), category tabs, sort, product dialog with colour/size options, cart drawer |
 | `checkout.html` | 3 steps: delivery (pick up at store with date + time, or address with standard/express, express limited to Bangkok metro) → payment (card / PromptPay QR / bank transfer) → review. Card runs a simulated 3-D Secure OTP (`123456`); PromptPay shows a sample QR with a 15-minute timer; transfer shows bank accounts and takes a slip upload |
 | `track.html` | Customer looks up an order by order number + last 4 digits of phone: progress bar, carrier + tracking number, timeline, upload a slip later |
-| `admin.html` | Back office (demo passcode `demo`): KPIs, filters, search, order drawer to verify slips, mark paid/refund, update status with carrier + tracking number, notify customer (simulated), seed sample orders, wipe demo data |
+| `admin.html` → **สต็อกสินค้า** | One stock pool for web and store: on hand, reserved (unpaid orders), available, unit cost, low-stock flags; receive stock, stock-count adjustments, and a movement ledger. Paid orders deduct stock once; cancelled/refunded orders return it |
+| `admin.html` → **POS หน้าร้าน** | Tap or scan SKU to build a bill, cash (change calculation) / PromptPay / card (EDC); creates a paid in-store order and deducts stock |
+| `admin.html` → **สรุปยอดขาย** | 7 days / 30 days / this month / all: sales, bills, average bill, gross profit, margin; daily sales chart (web vs store); simple P&L (VAT 7%, cost of goods, payment fees); best sellers; payment-method split; CSV export for the accountant |
+| `admin.html` → คำสั่งซื้อ | Back office (demo passcode `demo`): KPIs, filters, search, order drawer to verify slips, mark paid/refund, update status with carrier + tracking number, notify customer (simulated), seed sample orders, wipe demo data |
 
 Order lifecycle: payment `pending → awaiting_verification → paid` (or `failed` / `refunded`);
 delivery `placed → confirmed → packing → shipped → out_for_delivery → delivered`;
@@ -67,7 +70,9 @@ css/shop.css            commerce styles
 js/shop/catalog.js      products + simulated prices          ← edit prices here
 js/shop/store.js        cart, orders, statuses, shipping rates, validation (localStorage)
 js/shop/ui.js           cart drawer, cart badge, toasts
-js/shop/{shop,checkout,track,admin,home}.js   page logic
+js/shop/inventory.js    stock ledger, POS sale, sales report (costs/fees simulated)
+js/shop/backoffice.js   admin tabs: stock, POS, sales summary
+js/shop/{shop,checkout,track,admin,home,quick}.js   page logic
 js/thai-wrap.js         keeps Thai words whole when lines wrap
 assets/img/shop/        accessory product photos (Springbar®)
 ```

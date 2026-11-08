@@ -48,7 +48,7 @@
     const sh = o.shipping;
     $('#vShip').innerHTML = sh.trackingNo
       ? `<div class="tracking"><span>ขนส่งโดย <b>${esc(sh.carrier)}</b></span><span>เลขพัสดุ <b class="sel">${esc(sh.trackingNo)}</b></span><button class="link-btn" data-copy="${esc(sh.trackingNo)}">คัดลอกเลขพัสดุ</button></div>`
-      : sh.method === 'pickup' ? `<p class="hint">นัดรับที่ร้าน ${esc(sh.pickupDate)} เวลา ${esc(sh.pickupTime)} · ${esc(S.STORE.hours)}</p>` : `<p class="hint">เลขพัสดุจะแสดงที่นี่เมื่อร้านส่งมอบสินค้าให้ขนส่ง</p>`;
+      : (sh.method === 'pickup' || sh.method === 'pos') ? `<p class="hint">นัดรับที่ร้าน ${esc(sh.pickupDate)} เวลา ${esc(sh.pickupTime)} · ${esc(S.STORE.hours)}</p>` : `<p class="hint">เลขพัสดุจะแสดงที่นี่เมื่อร้านส่งมอบสินค้าให้ขนส่ง</p>`;
 
     // payment box: let a transfer customer attach a slip from here
     const pb = $('#vPayBox');
@@ -74,7 +74,7 @@
     $('#vTimeline').innerHTML = o.history.slice().reverse().map((h) => `<li><time>${S.dateTH(h.at)}</time><b>${esc(S.STATUS[h.status] ? S.STATUS[h.status].label : h.status)}</b>${h.note ? `<span>${esc(h.note)}</span>` : ''}</li>`).join('');
     $('#vLines').innerHTML = o.lines.map((l) => `<div class="sum-line"><span class="sum-line__img"><img src="${esc(l.image)}" alt=""/><i>${l.qty}</i></span><span class="sum-line__name">${esc(l.name)}${l.label ? `<small>${esc(l.label)}</small>` : ''}</span><b>${S.thb(l.price * l.qty)}</b></div>`).join('');
     $('#vTotals').innerHTML = `<div class="sum-row"><span>ยอดรวมสินค้า</span><span>${S.thb(o.totals.subtotal)}</span></div><div class="sum-row"><span>ค่าจัดส่ง</span><span>${o.totals.shipping ? S.thb(o.totals.shipping) : 'ฟรี'}</span></div><div class="sum-row sum-row--total"><span>รวม</span><b>${S.thb(o.totals.total)}</b></div>`;
-    $('#vAddr').innerHTML = sh.method === 'pickup'
+    $('#vAddr').innerHTML = (sh.method === 'pickup' || sh.method === 'pos')
       ? `รับที่ร้าน · ${esc(S.STORE.name)}<br>${esc(o.customer.name)} · ${esc(o.customer.phone)}`
       : `${esc(o.customer.name)} · ${esc(o.customer.phone)}<br>${esc(sh.address.line1)} ${esc(sh.address.subdistrict)} ${esc(sh.address.district)} ${esc(sh.address.province)} ${esc(sh.address.postcode)}`;
     try { history.replaceState(null, '', '?order=' + encodeURIComponent(o.no)); } catch (e) { /* sandboxed preview */ }

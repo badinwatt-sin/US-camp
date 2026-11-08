@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Ultra&family=Jost:wght@300;400;500;600&family=Yellowtail&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=20261108d" />
-  <link rel="stylesheet" href="css/shop.css?v=20261108d" />
+  <link rel="stylesheet" href="css/style.css?v=20261108j" />
+  <link rel="stylesheet" href="css/shop.css?v=20261108j" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231F1A14'/%3E%3Cpath d='M12 50 L20 18 H44 L52 50 Z' fill='%23B98D57'/%3E%3C/svg%3E" />
 </head>
 <body class="commerce admin-page">
@@ -46,6 +46,13 @@
   </section>
 
   <section id="app" hidden>
+    <nav class="ad-tabs" role="tablist" aria-label="เมนูหลังร้าน">
+      <button role="tab" class="ad-tab is-active" data-pane="orders" aria-selected="true">คำสั่งซื้อ</button>
+      <button role="tab" class="ad-tab" data-pane="stock" aria-selected="false">สต็อกสินค้า</button>
+      <button role="tab" class="ad-tab" data-pane="pos" aria-selected="false">POS หน้าร้าน</button>
+      <button role="tab" class="ad-tab" data-pane="report" aria-selected="false">สรุปยอดขาย</button>
+    </nav>
+    <div class="ad-pane is-active" data-pane="orders">
     <header class="ad-head">
       <div><p class="eyebrow">Orders</p><h1>คำสั่งซื้อ</h1></div>
       <div class="ad-tools">
@@ -59,7 +66,102 @@
       <label class="search" for="q"><span class="sr-only">ค้นหา</span><input id="q" type="search" placeholder="ค้นหาเลขคำสั่งซื้อ ชื่อ หรือเบอร์โทร" /></label>
     </div>
     <div class="orders" id="orders"></div>
+    </div>
+
+    <!-- ===== stock ===== -->
+    <div class="ad-pane" data-pane="stock">
+      <header class="ad-head">
+        <div><p class="eyebrow">Inventory</p><h1>สต็อกสินค้า</h1></div>
+        <div class="ad-tools">
+          <button class="btn btn--ink btn--sm" id="stReceiveBtn">+ รับสินค้าเข้า</button>
+          <button class="btn btn--line btn--sm" id="stCountBtn">ปรับยอดตรวจนับ</button>
+        </div>
+      </header>
+      <div class="kpis" id="stKpis"></div>
+      <div class="ad-bar">
+        <div class="tabs" id="stFilter" role="tablist" aria-label="กรองสต็อก">
+          <button role="tab" class="tab is-active" data-g="all">ทั้งหมด</button>
+          <button role="tab" class="tab" data-g="tents">เต้นท์</button>
+          <button role="tab" class="tab" data-g="accessories">อุปกรณ์ Springbar®</button>
+          <button role="tab" class="tab" data-g="partner">สินค้าพาร์ทเนอร์</button>
+          <button role="tab" class="tab" data-g="low">ใกล้หมด</button>
+        </div>
+        <label class="search" for="stQ"><span class="sr-only">ค้นหาสินค้า</span><input id="stQ" type="search" placeholder="ค้นหาชื่อสินค้าหรือ SKU" /></label>
+      </div>
+      <div class="stable-wrap"><table class="stable" id="stTable"></table></div>
+      <h2 class="ad-sub">ความเคลื่อนไหวล่าสุด</h2>
+      <div class="stable-wrap"><table class="stable stable--moves" id="stMoves"></table></div>
+    </div>
+
+    <!-- ===== POS ===== -->
+    <div class="ad-pane" data-pane="pos">
+      <header class="ad-head"><div><p class="eyebrow">Point of sale</p><h1>POS หน้าร้าน</h1></div></header>
+      <div class="pos">
+        <div class="pos__catalog">
+          <label class="search" for="posQ"><span class="sr-only">ค้นหาสินค้า</span><input id="posQ" type="search" placeholder="ค้นหาหรือสแกน SKU" /></label>
+          <div class="pos__grid" id="posGrid"></div>
+        </div>
+        <aside class="pos__bill">
+          <h2>บิลขาย</h2>
+          <div class="pos__lines" id="posLines"></div>
+          <div class="sum-calc" id="posSum"></div>
+          <label class="f" for="posCust">ชื่อลูกค้า <i>(ไม่บังคับ)</i><input id="posCust" placeholder="ลูกค้าหน้าร้าน" /></label>
+          <p class="lbl">วิธีชำระเงิน</p>
+          <div class="pos__pay" id="posPay" role="radiogroup" aria-label="วิธีชำระเงิน">
+            <button type="button" role="radio" class="opt is-active" data-pay="cash" aria-checked="true">เงินสด</button>
+            <button type="button" role="radio" class="opt" data-pay="promptpay" aria-checked="false">พร้อมเพย์</button>
+            <button type="button" role="radio" class="opt" data-pay="card" aria-checked="false">บัตร (EDC)</button>
+          </div>
+          <div class="pos__cash" id="posCash"><label class="f" for="posRecv">รับเงินมา<input id="posRecv" inputmode="numeric" placeholder="0" /></label><p id="posChange" class="pos__change"></p></div>
+          <button class="btn btn--ink btn--block" id="posCharge" disabled>ชำระเงิน</button>
+          <button class="link-btn" id="posClear" type="button">ล้างบิล</button>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ===== report ===== -->
+    <div class="ad-pane" data-pane="report">
+      <header class="ad-head">
+        <div><p class="eyebrow">Sales summary</p><h1>สรุปยอดขาย</h1></div>
+        <div class="ad-tools">
+          <div class="tabs" id="rpRange" role="tablist" aria-label="ช่วงเวลา">
+            <button role="tab" class="tab" data-r="7">7 วัน</button>
+            <button role="tab" class="tab is-active" data-r="30">30 วัน</button>
+            <button role="tab" class="tab" data-r="month">เดือนนี้</button>
+            <button role="tab" class="tab" data-r="all">ทั้งหมด</button>
+          </div>
+          <button class="btn btn--line btn--sm" id="rpCsv">ส่งออก CSV</button>
+        </div>
+      </header>
+      <div class="kpis kpis--report" id="rpKpis"></div>
+      <div class="rp-grid">
+        <section class="box rp-chart">
+          <div class="rp-chart__head"><h2>ยอดขายรายวัน</h2><div class="legend"><span><i style="--c:var(--ch-web)"></i>หน้าเว็บ</span><span><i style="--c:var(--ch-pos)"></i>หน้าร้าน</span></div></div>
+          <div class="chart" id="rpChart"></div>
+        </section>
+        <section class="box"><h2>งบกำไรขาดทุนอย่างย่อ</h2><dl class="pl" id="rpPL"></dl></section>
+      </div>
+      <div class="rp-grid">
+        <section class="box"><h2>ขายดีตามสินค้า</h2><div class="stable-wrap"><table class="stable" id="rpProducts"></table></div></section>
+        <section class="box"><h2>แยกตามวิธีชำระเงิน</h2><div class="stable-wrap"><table class="stable" id="rpPay"></table></div></section>
+      </div>
+      <p class="fine">ตัวเลขทั้งหมดเป็นข้อมูลจำลอง: ต้นทุน ค่าธรรมเนียม และสต็อกยกมาเป็นค่าตัวอย่าง ใช้ดูภาพรวมร้าน ไม่ใช่เอกสารทางบัญชีหรือภาษี (ใบกำกับภาษีและ ภ.พ.30 ให้ทำในโปรแกรมบัญชี)</p>
+    </div>
   </section>
+
+<dialog class="stock-dlg" id="stDlg" aria-labelledby="stDlgTitle">
+  <form method="dialog" id="stForm" novalidate>
+    <h2 id="stDlgTitle">รับสินค้าเข้า</h2>
+    <label class="f" for="stSku">สินค้า<select id="stSku"></select></label>
+    <div class="f-grid">
+      <label class="f" for="stQty"><span id="stQtyLabel">จำนวนที่รับเข้า</span><input id="stQty" type="number" inputmode="numeric" min="0" value="1" /></label>
+      <label class="f" for="stCost" id="stCostWrap">ต้นทุนต่อชิ้น (บาท)<input id="stCost" type="number" inputmode="numeric" min="0" /></label>
+    </div>
+    <label class="f" for="stNote">หมายเหตุ<input id="stNote" placeholder="เช่น PO-2026-011 จาก Springbar" /></label>
+    <p class="err" id="stErr2" hidden></p>
+    <div class="co-actions"><button class="btn btn--line btn--sm" value="cancel" type="button" id="stCancel">ยกเลิก</button><button class="btn btn--ink" id="stSave" type="submit">บันทึก</button></div>
+  </form>
+</dialog>
 </main>
 
 <div class="drawer drawer--wide" id="od" hidden>
@@ -75,11 +177,13 @@
 
 <dialog class="lightbox" id="lightbox"><img id="lbImg" alt="สลิปการโอน" /><button class="icon-btn" id="lbClose" aria-label="ปิด">✕</button></dialog>
 
-<script src="js/data.js?v=20261108d"></script>
-<script src="js/shop/catalog.js?v=20261108d"></script>
-<script src="js/shop/store.js?v=20261108d"></script>
-<script src="js/shop/ui.js?v=20261108d"></script>
-<script src="js/shop/admin.js?v=20261108d"></script>
-<script src="js/thai-wrap.js?v=20261108d"></script>
+<script src="js/data.js?v=20261108j"></script>
+<script src="js/shop/catalog.js?v=20261108j"></script>
+<script src="js/shop/store.js?v=20261108j"></script>
+<script src="js/shop/ui.js?v=20261108j"></script>
+<script src="js/shop/inventory.js?v=20261108j"></script>
+<script src="js/shop/admin.js?v=20261108j"></script>
+<script src="js/shop/backoffice.js?v=20261108j"></script>
+<script src="js/thai-wrap.js?v=20261108j"></script>
 </body>
 </html>

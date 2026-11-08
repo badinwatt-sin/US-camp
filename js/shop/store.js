@@ -111,7 +111,7 @@
     delivery: ['placed', 'confirmed', 'packing', 'shipped', 'out_for_delivery', 'delivered'],
     pickup: ['placed', 'confirmed', 'packing', 'ready_for_pickup', 'picked_up']
   };
-  const flowOf = (o) => FLOW[o.shipping.method === 'pickup' ? 'pickup' : 'delivery'];
+  const flowOf = (o) => FLOW[(o.shipping.method === 'pickup' || o.shipping.method === 'pos') ? 'pickup' : 'delivery'];
 
   /* ---------- orders ---------- */
   function newOrderNo() {
