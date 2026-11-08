@@ -314,6 +314,12 @@
     $('#doneShip').innerHTML = o.shipping.method === 'pickup' ? `รับที่ร้าน · ${esc(o.shipping.pickupDate)} ${esc(o.shipping.pickupTime)}` : `${esc(o.shipping.label)} · ${esc(o.shipping.address.province)}`;
     $('#doneTotal').textContent = S.thb(o.totals.total);
     $('#doneTrack').href = 'track.html?order=' + encodeURIComponent(no);
+    const rcBtn = $('#doneReceipt');
+    if (rcBtn) {
+      const rc = window.USCampReceipts && window.USCampReceipts.ensure(o);
+      rcBtn.hidden = !rc;
+      if (rc) rcBtn.onclick = () => window.USCampReceipts.open(rc);
+    }
     $('#copyNo').onclick = async () => { try { await navigator.clipboard.writeText(no); UI.toast('คัดลอกเลขคำสั่งซื้อแล้ว'); } catch (e) { UI.toast('คัดลอกไม่ได้ กรุณาจดเลขคำสั่งซื้อไว้'); } };
   }
 

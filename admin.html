@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Ultra&family=Jost:wght@300;400;500;600&family=Yellowtail&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=20261108j" />
-  <link rel="stylesheet" href="css/shop.css?v=20261108j" />
+  <link rel="stylesheet" href="css/style.css?v=20261108k" />
+  <link rel="stylesheet" href="css/shop.css?v=20261108k" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231F1A14'/%3E%3Cpath d='M12 50 L20 18 H44 L52 50 Z' fill='%23B98D57'/%3E%3C/svg%3E" />
 </head>
 <body class="commerce admin-page">
@@ -50,6 +50,7 @@
       <button role="tab" class="ad-tab is-active" data-pane="orders" aria-selected="true">คำสั่งซื้อ</button>
       <button role="tab" class="ad-tab" data-pane="stock" aria-selected="false">สต็อกสินค้า</button>
       <button role="tab" class="ad-tab" data-pane="pos" aria-selected="false">POS หน้าร้าน</button>
+      <button role="tab" class="ad-tab" data-pane="receipts" aria-selected="false">ใบเสร็จ</button>
       <button role="tab" class="ad-tab" data-pane="report" aria-selected="false">สรุปยอดขาย</button>
     </nav>
     <div class="ad-pane is-active" data-pane="orders">
@@ -119,6 +120,30 @@
       </div>
     </div>
 
+    <!-- ===== receipts ===== -->
+    <div class="ad-pane" data-pane="receipts">
+      <header class="ad-head">
+        <div><p class="eyebrow">Receipts</p><h1>ใบเสร็จ</h1></div>
+        <div class="ad-tools">
+          <label class="sort" for="rcMonth">เดือน<select id="rcMonth"></select></label>
+          <button class="btn btn--ink btn--sm" id="rcPdfMonth">บันทึก PDF ทั้งเดือน</button>
+        </div>
+      </header>
+      <div class="rc-store" id="rcStore"></div>
+      <div class="ad-bar">
+        <div class="tabs" id="rcFilter" role="tablist" aria-label="กรองใบเสร็จ">
+          <button role="tab" class="tab is-active" data-f="all">ทั้งหมด</button>
+          <button role="tab" class="tab" data-f="unsaved">ยังไม่จัดเก็บ</button>
+          <button role="tab" class="tab" data-f="archived">จัดเก็บแล้ว</button>
+          <button role="tab" class="tab" data-f="void">ยกเลิก</button>
+        </div>
+        <label class="search" for="rcQ"><span class="sr-only">ค้นหาใบเสร็จ</span><input id="rcQ" type="search" placeholder="ค้นหาเลขที่ใบเสร็จ คำสั่งซื้อ หรือชื่อลูกค้า" /></label>
+      </div>
+      <div class="stable-wrap"><table class="stable" id="rcTable"></table></div>
+      <div class="rc-actions" style="margin-top:12px"><button class="btn btn--line btn--sm" id="rcArchive" disabled>จัดเก็บรายการที่เลือก (หลังบันทึก PDF แล้ว)</button></div>
+      <p class="fine">ระบบเก็บเฉพาะข้อมูลใบเสร็จ (ประมาณ 1–2 KB ต่อใบ) และสร้าง PDF ใหม่ได้ทุกเมื่อ การ “จัดเก็บ” จะลบรูปสลิปโอนออกจากระบบเพื่อประหยัดพื้นที่ ส่วนข้อมูลใบเสร็จยังอยู่ครบ</p>
+    </div>
+
     <!-- ===== report ===== -->
     <div class="ad-pane" data-pane="report">
       <header class="ad-head">
@@ -177,13 +202,16 @@
 
 <dialog class="lightbox" id="lightbox"><img id="lbImg" alt="สลิปการโอน" /><button class="icon-btn" id="lbClose" aria-label="ปิด">✕</button></dialog>
 
-<script src="js/data.js?v=20261108j"></script>
-<script src="js/shop/catalog.js?v=20261108j"></script>
-<script src="js/shop/store.js?v=20261108j"></script>
-<script src="js/shop/ui.js?v=20261108j"></script>
-<script src="js/shop/inventory.js?v=20261108j"></script>
-<script src="js/shop/admin.js?v=20261108j"></script>
-<script src="js/shop/backoffice.js?v=20261108j"></script>
-<script src="js/thai-wrap.js?v=20261108j"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="js/data.js?v=20261108k"></script>
+<script src="js/shop/catalog.js?v=20261108k"></script>
+<script src="js/shop/store.js?v=20261108k"></script>
+<script src="js/shop/ui.js?v=20261108k"></script>
+<script src="js/shop/receipt.js?v=20261108k"></script>
+<script src="js/shop/inventory.js?v=20261108k"></script>
+<script src="js/shop/admin.js?v=20261108k"></script>
+<script src="js/shop/backoffice.js?v=20261108k"></script>
+<script src="js/thai-wrap.js?v=20261108k"></script>
 </body>
 </html>

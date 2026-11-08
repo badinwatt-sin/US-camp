@@ -43,6 +43,7 @@ python3 -m http.server 8000
 | `track.html` | Customer looks up an order by order number + last 4 digits of phone: progress bar, carrier + tracking number, timeline, upload a slip later |
 | `admin.html` → **สต็อกสินค้า** | One stock pool for web and store: on hand, reserved (unpaid orders), available, unit cost, low-stock flags; receive stock, stock-count adjustments, and a movement ledger. Paid orders deduct stock once; cancelled/refunded orders return it |
 | `admin.html` → **POS หน้าร้าน** | Tap or scan SKU to build a bill, cash (change calculation) / PromptPay / card (EDC); creates a paid in-store order and deducts stock |
+| `admin.html` → **ใบเสร็จ** | A receipt (sequential no. RC{yymm}-0001) is issued automatically once an order is paid, from web or POS. Only a small data snapshot (~1–2 KB) is stored; the document is rebuilt on demand: view, print A4, print 80 mm slip, download PDF (one or a whole month). Void keeps the number. Archiving (after saving the PDFs) removes slip images to free space. Seller details are placeholders |
 | `admin.html` → **สรุปยอดขาย** | 7 days / 30 days / this month / all: sales, bills, average bill, gross profit, margin; daily sales chart (web vs store); simple P&L (VAT 7%, cost of goods, payment fees); best sellers; payment-method split; CSV export for the accountant |
 | `admin.html` → คำสั่งซื้อ | Back office (demo passcode `demo`): KPIs, filters, search, order drawer to verify slips, mark paid/refund, update status with carrier + tracking number, notify customer (simulated), seed sample orders, wipe demo data |
 
@@ -70,6 +71,7 @@ css/shop.css            commerce styles
 js/shop/catalog.js      products + simulated prices          ← edit prices here
 js/shop/store.js        cart, orders, statuses, shipping rates, validation (localStorage)
 js/shop/ui.js           cart drawer, cart badge, toasts
+js/shop/receipt.js      receipts: issue, render, print (A4 / 80 mm), PDF (html2pdf.js), void, archive
 js/shop/inventory.js    stock ledger, POS sale, sales report (costs/fees simulated)
 js/shop/backoffice.js   admin tabs: stock, POS, sales summary
 js/shop/{shop,checkout,track,admin,home,quick}.js   page logic

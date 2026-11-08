@@ -17,17 +17,21 @@
     try { history.replaceState(null, '', '#' + p); } catch (e) { /* sandboxed */ }
   }
   $$('.ad-tab').forEach((t) => t.addEventListener('click', () => show(t.dataset.pane)));
+  let seeding = false;
   function renderPane() {
-    if ($('#app').hidden) return;
+    if ($('#app').hidden || seeding) return;
     I.syncOrders();
+    if (window.USCampReceipts) window.USCampReceipts.syncAll();
     if (pane === 'stock') renderStock();
     if (pane === 'pos') renderPos();
     if (pane === 'report') renderReport();
+    if (pane === 'receipts') renderReceipts();
   }
   document.addEventListener('uscamp:store', () => { I.syncOrders(); renderPane(); });
   document.addEventListener('uscamp:inventory', renderPane);
+  document.addEventListener('uscamp:receipts', () => { if (pane === 'receipts') renderReceipts(); });
   // the gate in admin.js reveals #app; render the chosen pane once it does
-  new MutationObserver(() => { if (!$('#app').hidden) { const h = location.hash.slice(1); show(['stock', 'pos', 'report'].includes(h) ? h : pane); } }).observe($('#app'), { attributes: true, attributeFilter: ['hidden'] });
+  new MutationObserver(() => { if (!$('#app').hidden) { const h = location.hash.slice(1); show(['stock', 'pos', 'report', 'receipts'].includes(h) ? h : pane); } }).observe($('#app'), { attributes: true, attributeFilter: ['hidden'] });
 
   /* =========================================================
      STOCK
@@ -161,6 +165,7 @@
     const name = $('#posCust').value.trim();
     const o = I.posSale(bill, pay, name ? { name } : null);
     UI.toast(`บันทึกการขาย ${o.no} · ${thb(total)} · ตัดสต็อกแล้ว`);
+    if (window.USCampReceipts) { const rc = window.USCampReceipts.ensure(o); setTimeout(() => window.USCampReceipts.open(rc), 250); }
     bill = []; $('#posRecv').value = ''; $('#posCust').value = '';
     renderPos();
   });
@@ -250,6 +255,7 @@
 
   /* demo: the 'sample orders' button also adds ~3 weeks of backdated sales so the summary has a history */
   $('#seed').addEventListener('click', () => {
+    seeding = true;
     const picks = [['tent-compact', 'natural'], ['tent-vagabond', 'suntan'], ['ground-tarp', '8x10'], ['stake', null], ['tote', null], ['door-mat', null], ['tent-outfitter', 'driftwood'], ['lantern-strap', null], ['organizer', null], ['weekender', null]];
     const pays = ['card', 'promptpay', 'transfer', 'cash', 'promptpay'];
     for (let i = 0; i < 12; i++) {
@@ -268,7 +274,70 @@
       }
       S.orders.update(o.no, { createdAt: d.toISOString(), payment: { paidAt: d.toISOString() } });
     }
+    seeding = false;
     I.syncOrders();
+    renderPane();
+  });
+
+  /* =========================================================
+     RECEIPTS
+     ========================================================= */
+  const R = window.USCampReceipts;
+  let rcF = 'all', rcQ = '', rcSel = new Set();
+  const monthKey = (iso) => iso.slice(0, 7);
+  const archLabel = () => (rcSel.size ? `จัดเก็บ ${rcSel.size} รายการที่เลือก (หลังบันทึก PDF แล้ว)` : 'จัดเก็บรายการที่เลือก (หลังบันทึก PDF แล้ว)');
+  $('#rcFilter').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (!b) return; rcF = b.dataset.f; $$('#rcFilter .tab').forEach((t) => t.classList.toggle('is-active', t === b)); renderReceipts(); });
+  $('#rcQ').addEventListener('input', (e) => { rcQ = e.target.value.trim().toLowerCase(); renderReceipts(); });
+  $('#rcMonth').addEventListener('change', renderReceipts);
+  function renderReceipts() {
+    if (!R) return;
+    R.syncAll();
+    const all = R.list();
+    const months = [...new Set(all.map((r) => monthKey(r.paidAt)))].sort().reverse();
+    const cur = $('#rcMonth').value;
+    $('#rcMonth').innerHTML = '<option value="">ทุกเดือน</option>' + months.map((m) => `<option value="${m}">${new Date(m + '-01').toLocaleDateString('th-TH', { month: 'long', year: 'numeric' })}</option>`).join('');
+    if (months.includes(cur)) $('#rcMonth').value = cur;
+    const m = $('#rcMonth').value;
+    const list = all.filter((r) => (!m || monthKey(r.paidAt) === m)
+      && (rcF === 'all' || (rcF === 'void' ? r.status === 'void' : rcF === 'archived' ? r.archived : (!r.archived && r.status !== 'void')))
+      && (!rcQ || [r.no, r.orderNo, r.customer.name].join(' ').toLowerCase().includes(rcQ)));
+    const bytes = R.storageBytes(), quota = 5 * 1024 * 1024;
+    const slipBytes = S.orders.list().reduce((n, o) => n + ((o.payment.slip && o.payment.slip.image) ? o.payment.slip.image.length * 2 : 0), 0);
+    $('#rcStore').innerHTML = `<p><b>พื้นที่ข้อมูลที่ใช้ (เบราว์เซอร์นี้)</b><br>${(bytes / 1024).toFixed(0)} KB จากประมาณ 5 MB · รูปสลิป ${(slipBytes / 1024).toFixed(0)} KB · ใบเสร็จ ${all.length} ใบ</p><div class="rc-store__bar" role="img" aria-label="ใช้พื้นที่ ${(bytes / quota * 100).toFixed(1)}%"><i style="width:${Math.min(100, bytes / quota * 100).toFixed(1)}%"></i></div>`;
+    rcSel = new Set([...rcSel].filter((no) => list.some((r) => r.no === no)));
+    $('#rcTable').innerHTML = `<thead><tr><th><input type="checkbox" id="rcAll" aria-label="เลือกทั้งหมด"/></th><th>เลขที่</th><th>วันที่ชำระ</th><th>ลูกค้า</th><th>ช่องทาง</th><th class="r">ยอดรวม</th><th>สถานะ</th><th></th></tr></thead><tbody>${
+      list.map((r) => `<tr><td><input type="checkbox" data-sel="${esc(r.no)}" ${rcSel.has(r.no) ? 'checked' : ''} ${r.archived || r.status === 'void' ? 'disabled' : ''} aria-label="เลือก ${esc(r.no)}"/></td><td class="mono"><b>${esc(r.no)}</b><small>${esc(r.orderNo)}</small></td><td class="num">${S.dateTH(r.paidAt)}</td><td>${esc(r.customer.name)}</td><td>${r.channel === 'pos' ? 'หน้าร้าน' : 'หน้าเว็บ'}</td><td class="r num">${thb(r.total)}</td><td>${r.status === 'void' ? '<span class="badge badge--bad">ยกเลิก</span>' : r.archived ? '<span class="badge badge--muted">จัดเก็บแล้ว</span>' : '<span class="badge badge--ok">ออกแล้ว</span>'}</td><td class="r"><button class="link-btn" data-view="${esc(r.no)}">ดู / PDF</button>${r.status !== 'void' ? ` · <button class="link-btn danger" data-void="${esc(r.no)}">ยกเลิก</button>` : ''}</td></tr>`).join('') || '<tr><td colspan="8" class="muted">ยังไม่มีใบเสร็จ ใบเสร็จจะออกอัตโนมัติเมื่อคำสั่งซื้อชำระเงินแล้ว</td></tr>'
+    }</tbody>`;
+    $('#rcArchive').disabled = !rcSel.size;
+    $('#rcArchive').textContent = archLabel();
+  }
+  $('#rcTable').addEventListener('change', (e) => {
+    if (e.target.id === 'rcAll') $$('#rcTable [data-sel]:not(:disabled)').forEach((c) => { c.checked = e.target.checked; if (c.checked) rcSel.add(c.dataset.sel); else rcSel.delete(c.dataset.sel); });
+    const c = e.target.closest('[data-sel]'); if (c) { if (c.checked) rcSel.add(c.dataset.sel); else rcSel.delete(c.dataset.sel); }
+    $('#rcArchive').disabled = !rcSel.size;
+    $('#rcArchive').textContent = archLabel();
+  });
+  $('#rcTable').addEventListener('click', (e) => {
+    const v = e.target.closest('[data-view]'); if (v) { R.open(R.get(v.dataset.view)); return; }
+    const x = e.target.closest('[data-void]');
+    if (x) {
+      if (x.dataset.confirm !== '1') { x.dataset.confirm = '1'; x.textContent = 'กดอีกครั้งเพื่อยืนยันยกเลิก'; return; }
+      R.void(x.dataset.void, 'ยกเลิกโดยร้าน'); UI.toast('ยกเลิกใบเสร็จแล้ว (เลขที่ยังเก็บไว้ในระบบ)');
+    }
+  });
+  $('#rcArchive').addEventListener('click', () => {
+    const freed = R.archive([...rcSel]); rcSel.clear();
+    UI.toast(`จัดเก็บแล้ว · คืนพื้นที่ ${(freed * 2 / 1024).toFixed(0)} KB`);
+    renderReceipts();
+  });
+  $('#rcPdfMonth').addEventListener('click', async (e) => {
+    const m = $('#rcMonth').value;
+    const list = R.list().filter((r) => r.status !== 'void' && (!m || monthKey(r.paidAt) === m)).reverse();
+    if (!list.length) { UI.toast('ไม่มีใบเสร็จในช่วงนี้'); return; }
+    const b = e.currentTarget; b.disabled = true; const t = b.textContent; b.textContent = `กำลังสร้าง PDF ${list.length} ใบ…`;
+    try { await R.pdf(list, `uscamp-receipts-${m || 'all'}.pdf`); UI.toast(`บันทึก PDF ${list.length} ใบแล้ว · เลือกรายการแล้วกด “จัดเก็บ” เพื่อคืนพื้นที่`); }
+    catch (err) { UI.toast('สร้าง PDF ไม่ได้ในหน้านี้'); }
+    b.disabled = false; b.textContent = t;
   });
 
   /* CSV export (sales lines) */

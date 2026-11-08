@@ -71,6 +71,10 @@
       pb.hidden = false; pb.innerHTML = `<h3>การชำระเงินไม่สำเร็จ</h3><p>${esc(o.payment.reason || 'สลิปไม่ถูกต้องหรือยอดเงินไม่ตรง')} ติดต่อร้านทาง LINE <b class="sel">${S.CONTACT.line}</b></p>`;
     } else pb.hidden = true;
 
+    if (window.USCampReceipts && o.payment.status === 'paid' && o.status !== 'cancelled') {
+      const rc = window.USCampReceipts.ensure(o);
+      $('#vShip').insertAdjacentHTML('beforeend', `<div class="rc-cta"><span>ใบเสร็จเลขที่ <b>${esc(rc.no)}</b></span><button class="btn btn--line btn--sm" data-rc-open="${esc(rc.no)}">ดูใบเสร็จ / PDF</button></div>`);
+    }
     $('#vTimeline').innerHTML = o.history.slice().reverse().map((h) => `<li><time>${S.dateTH(h.at)}</time><b>${esc(S.STATUS[h.status] ? S.STATUS[h.status].label : h.status)}</b>${h.note ? `<span>${esc(h.note)}</span>` : ''}</li>`).join('');
     $('#vLines').innerHTML = o.lines.map((l) => `<div class="sum-line"><span class="sum-line__img"><img src="${esc(l.image)}" alt=""/><i>${l.qty}</i></span><span class="sum-line__name">${esc(l.name)}${l.label ? `<small>${esc(l.label)}</small>` : ''}</span><b>${S.thb(l.price * l.qty)}</b></div>`).join('');
     $('#vTotals').innerHTML = `<div class="sum-row"><span>ยอดรวมสินค้า</span><span>${S.thb(o.totals.subtotal)}</span></div><div class="sum-row"><span>ค่าจัดส่ง</span><span>${o.totals.shipping ? S.thb(o.totals.shipping) : 'ฟรี'}</span></div><div class="sum-row sum-row--total"><span>รวม</span><b>${S.thb(o.totals.total)}</b></div>`;
@@ -81,6 +85,7 @@
   }
 
   document.addEventListener('click', async (e) => {
+    const ro = e.target.closest('[data-rc-open]'); if (ro) { window.USCampReceipts.open(window.USCampReceipts.get(ro.dataset.rcOpen)); return; }
     const c = e.target.closest('[data-copy]'); if (!c) return;
     try { await navigator.clipboard.writeText(c.dataset.copy); UI.toast('คัดลอกแล้ว'); } catch (err) { UI.toast('คัดลอกไม่ได้ กรุณาจดไว้แทน'); }
   });

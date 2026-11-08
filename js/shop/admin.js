@@ -88,7 +88,7 @@
     const addr = (sh.method === 'pickup' || sh.method === 'pos')
       ? `รับที่ร้าน · ${esc(sh.pickupDate)} ${esc(sh.pickupTime)}`
       : `${esc(sh.address.line1)} ${esc(sh.address.subdistrict)} ${esc(sh.address.district)} ${esc(sh.address.province)} ${esc(sh.address.postcode)}${sh.address.note ? `<br><i>หมายเหตุ: ${esc(sh.address.note)}</i>` : ''}`;
-    const slip = p.slip && p.slip.image ? `<button class="slip-thumb" data-slip><img src="${p.slip.image}" alt="สลิปการโอน"/><span>ดูสลิปขนาดเต็ม</span></button><p class="fine">${p.slip.bank ? 'โอนจาก ' + esc(p.slip.bank) + ' · ' : ''}${p.slip.time ? esc(p.slip.time.replace('T', ' ')) + ' · ' : ''}แนบเมื่อ ${S.dateTH(p.slip.uploadedAt)}</p>` : '';
+    const slip = p.slip && p.slip.archived && !p.slip.image ? '<p class="fine">รูปสลิปถูกลบออกจากระบบหลังจัดเก็บใบเสร็จแล้ว</p>' : p.slip && p.slip.image ? `<button class="slip-thumb" data-slip><img src="${p.slip.image}" alt="สลิปการโอน"/><span>ดูสลิปขนาดเต็ม</span></button><p class="fine">${p.slip.bank ? 'โอนจาก ' + esc(p.slip.bank) + ' · ' : ''}${p.slip.time ? esc(p.slip.time.replace('T', ' ')) + ' · ' : ''}แนบเมื่อ ${S.dateTH(p.slip.uploadedAt)}</p>` : '';
     const payActions = p.status === 'awaiting_verification'
       ? `<div class="od-actions"><button class="btn btn--ink btn--sm" data-act="approve">ยืนยันการชำระเงิน</button><button class="btn btn--line btn--sm danger" data-act="reject">สลิปไม่ถูกต้อง</button></div><label class="f" for="rejReason">เหตุผล (กรณีไม่ผ่าน)<input id="rejReason" placeholder="เช่น ยอดเงินไม่ตรง / สลิปไม่ชัด"/></label>`
       : p.status === 'pending' ? `<div class="od-actions"><button class="btn btn--line btn--sm" data-act="manual-paid">บันทึกว่าชำระแล้ว (ตรวจสอบเอง)</button></div>`
@@ -108,6 +108,8 @@
         <h3>การชำระเงิน · ${esc(p.label)}${p.last4 ? ` · ${esc(p.brand)} •••• ${esc(p.last4)}` : ''}</h3>
         ${slip}${payActions}
       </section>
+
+      ${p.status === 'paid' && o.status !== 'cancelled' && window.USCampReceipts ? (() => { const rc = window.USCampReceipts.ensure(o); return `<section class="od-sec"><h3>ใบเสร็จ</h3><p>เลขที่ <b>${esc(rc.no)}</b> · ออกเมื่อ ${S.dateTH(rc.issuedAt)}${rc.archived ? ' · <span class="badge badge--muted">จัดเก็บแล้ว</span>' : ''}</p><div class="od-actions"><button class="btn btn--ink btn--sm" data-rcp="${esc(rc.no)}">ดู / พิมพ์ / PDF</button></div></section>`; })() : ''}
 
       <section class="od-sec">
         <h3>อัปเดตสถานะการจัดส่ง</h3>
@@ -153,6 +155,8 @@
   }
 
   $('#odBody').addEventListener('click', (e) => {
+    const rcp = e.target.closest('[data-rcp]');
+    if (rcp) { window.USCampReceipts.open(window.USCampReceipts.get(rcp.dataset.rcp)); return; }
     const s = e.target.closest('[data-slip]');
     if (s) { $('#lbImg').src = s.querySelector('img').src; $('#lightbox').showModal(); return; }
     const a = e.target.closest('[data-act]'); if (!a || !openNo) return;
@@ -209,7 +213,7 @@
   $('#wipe').addEventListener('click', (e) => {
     const b = e.currentTarget;
     if (b.dataset.confirm !== '1') { b.dataset.confirm = '1'; b.textContent = 'กดอีกครั้งเพื่อลบทั้งหมด'; setTimeout(() => { b.dataset.confirm = ''; b.textContent = 'ล้างข้อมูลสาธิต'; }, 4000); return; }
-    S.orders.reset(); if (window.USCampInventory) window.USCampInventory.reset(); b.dataset.confirm = ''; b.textContent = 'ล้างข้อมูลสาธิต'; UI.toast('ล้างข้อมูลสาธิตแล้ว');
+    S.orders.reset(); if (window.USCampInventory) window.USCampInventory.reset(); if (window.USCampReceipts) window.USCampReceipts.reset(); b.dataset.confirm = ''; b.textContent = 'ล้างข้อมูลสาธิต'; UI.toast('ล้างข้อมูลสาธิตแล้ว');
   });
 
   if (authed()) enter();
